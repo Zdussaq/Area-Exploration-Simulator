@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,17 @@ namespace CPE400Project.MapDisplay
         static MapDisplay()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
+        }
+
+        public static readonly DependencyProperty TestProperty = DependencyProperty.Register("Test", typeof(float), typeof(MapDisplay));
+        public float Test
+        {
+            get { return (float)GetValue(TestProperty); }
+            set 
+            {
+                SetValue(TestProperty, value);
+                Debug.WriteLine("alterred!");
+            }
         }
     }
 }
