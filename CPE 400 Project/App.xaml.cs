@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CPE_400_Project
+namespace CPE400Project
 {
     /// <summary>
     /// Interaction logic for App.xaml

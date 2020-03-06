@@ -1,7 +1,7 @@
-﻿<Application x:Class="CPE_400_Project.App"
+﻿<Application x:Class="CPE400Project.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CPE_400_Project"
+             xmlns:local="clr-namespace:CPE400Project"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

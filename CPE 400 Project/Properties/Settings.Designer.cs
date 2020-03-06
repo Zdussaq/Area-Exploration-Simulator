@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CPE_400_Project.Properties
+namespace CPE400Project.Properties
 {
 
 

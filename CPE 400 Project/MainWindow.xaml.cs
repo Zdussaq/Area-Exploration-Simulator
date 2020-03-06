@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CPE_400_Project
+namespace CPE400Project
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
