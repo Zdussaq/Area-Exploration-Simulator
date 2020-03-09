@@ -45,12 +45,18 @@ namespace CPE400Project.MapDisplay
     ///     <MyNamespace:CustomControl1/>
     ///
     /// </summary>
-    public class MapDisplay : Panel
+    public class MapDisplay : Control
     {
+        #region Constructors
         static MapDisplay()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
         }
+
+        #endregion //Constructors
+
+        #region Properties
+
 
         public static readonly DependencyProperty TestProperty = DependencyProperty.Register("Test", typeof(float), typeof(MapDisplay));
         public float Test
@@ -62,5 +68,9 @@ namespace CPE400Project.MapDisplay
                 Debug.WriteLine("alterred!");
             }
         }
+
+        #endregion //Properties
+
+
     }
 }

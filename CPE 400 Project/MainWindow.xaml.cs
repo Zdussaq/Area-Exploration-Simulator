@@ -21,36 +21,32 @@ namespace CPE400Project
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
+
+        #region Constructors
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            Test = 1;
-            Test = 2;
-            Debug.WriteLine(Testerino.Test);
-            Test = 5;
-            Debug.WriteLine(Testerino.Test);
         }
 
-        float _test;
+        #endregion Constructors
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Properties
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        public float Test
-        {
-            get { return _test; }
-            set 
-            {
-                _test = value;
-                NotifyPropertyChanged();
-            }
-        }
+        #endregion Properties
+
+        #region PrivateFunctions
+
+
+        #endregion PrivateFunctions
+
+        #region PublicFunctions
+
+
+        #endregion Public FUnctions
     }
 }
