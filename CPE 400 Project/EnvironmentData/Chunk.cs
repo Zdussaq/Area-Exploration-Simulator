@@ -19,7 +19,6 @@ namespace CPE_400_Project.EnvironmentData
             Elevation = elevation;
             Explored = false;
             IsHomeBase = isHomeBase;
-            Drones = new List<int>();
         }
 
         #endregion Constructors
@@ -31,9 +30,6 @@ namespace CPE_400_Project.EnvironmentData
         public bool Explored { get; set; }
 
         public bool IsHomeBase { get; set; }
-
-        //This might need to go into the map itself instead - not sure.
-        public IList<int/*to be replaced with drone class*/> Drones { get; set; }
 
         #endregion Properties
     }

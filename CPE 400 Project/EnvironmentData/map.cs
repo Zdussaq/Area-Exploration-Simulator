@@ -11,14 +11,9 @@ namespace CPE400Project.EnvironmentData
     {
         #region Constructors
 
-        public Map(int mapSize)
+        public Map(int height, int width)
         {
-            GenerateMapRandom(mapSize);
-        }
-
-        public Map(int length, int width)
-        {
-            GenerateMapBlock(length, width);
+            GenerateMap(height, width);
         }
 
 
@@ -32,14 +27,19 @@ namespace CPE400Project.EnvironmentData
 
         #region Public Functions
 
-        public void GenerateMapBlock(int length, int width)
+        public void GenerateMap(int height, int width)
         {
             Chunks = new List<IList<Chunk>>();
-        }
 
-        public void GenerateMapRandom(int mapSize)
-        {
-            Chunks = new List<IList<Chunk>>();
+            for (int i = 0; i < height; i++)
+            {
+                IList<Chunk> tempList = new List<Chunk>();
+                for (int j = 0; j < width; j++)
+                {
+                    tempList.Add(new Chunk(5));
+                }
+                Chunks.Add(tempList);
+            }
         }
 
         #endregion Public Fucntions
