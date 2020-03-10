@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPE400Project.EnvironmentData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -29,13 +30,20 @@ namespace CPE400Project
         public MainWindow()
         {
             InitializeComponent();
+
+            Map = new Map(900, 1600);
+            MapGrid.Map = Map;
             DataContext = this;
+
+
+
         }
 
         #endregion Constructors
 
         #region Properties
 
+        public Map Map { get; set; }
 
         #endregion Properties
 

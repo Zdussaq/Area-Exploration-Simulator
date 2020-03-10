@@ -10,7 +10,7 @@ namespace CPE_400_Project.EnvironmentData
     /// Represents a pixel area in the map. Will be contained in a 2d Array within the map. 
     /// Contains status info for the particular chunk, i.e. exlplored, elevation, homeBase, and any other things that may need to be included
     /// </summary>
-    class Chunk
+    public class Chunk
     {
         #region Constructors
 

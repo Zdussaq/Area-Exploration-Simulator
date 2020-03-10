@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPE400Project.EnvironmentData;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -45,32 +46,54 @@ namespace CPE400Project.MapDisplay
     ///     <MyNamespace:CustomControl1/>
     ///
     /// </summary>
-    public class MapDisplay : Control
+    public class MapDisplay : UserControl
     {
         #region Constructors
-        static MapDisplay()
+        public MapDisplay()
         {
+
+            Canvas = new Canvas();
+            Content = Canvas;
+
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
+
         }
 
-        #endregion //Constructors
+        #endregion Constructors
 
         #region Properties
 
+        public Canvas Canvas { get; set; }
 
-        public static readonly DependencyProperty TestProperty = DependencyProperty.Register("Test", typeof(float), typeof(MapDisplay));
-        public float Test
+        public static readonly DependencyProperty MapProperty = DependencyProperty.Register("Map", typeof(Map), typeof(MapDisplay));
+        public Map Map
         {
-            get { return (float)GetValue(TestProperty); }
+            get { return (Map)GetValue(MapProperty); }
             set 
             {
-                SetValue(TestProperty, value);
-                Debug.WriteLine("alterred!");
+                SetValue(MapProperty, value);
+                DrawMap();
             }
         }
 
-        #endregion //Properties
+        #endregion Properties
 
+        #region Public Functions
+
+        public void DrawMap()
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < Map.Width; i++)
+            {
+                for (int j = 0; j < Map.Height; i++)
+                {
+
+                }
+            }
+        }
+
+        #endregion Public Functions
 
     }
 }

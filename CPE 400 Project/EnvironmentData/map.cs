@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPE400Project.EnvironmentData
 {
-    class Map
+    public class Map
     {
         #region Constructors
 
@@ -22,6 +22,16 @@ namespace CPE400Project.EnvironmentData
         #region Properties
 
         public IList<IList<Chunk>> Chunks { get; set; }
+
+        public int Width
+        {
+            get { return Chunks.Count; }
+        }
+
+        public int Height
+        {
+            get { return Chunks[0].Count; }
+        }
 
         #endregion Properties
 
