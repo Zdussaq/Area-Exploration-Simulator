@@ -52,9 +52,12 @@ namespace CPE400Project.MapDisplay
         public MapDisplay()
         {
 
-            Canvas = new Canvas();
-            Content = Canvas;
+            ParentCanvas = new Canvas();
 
+            MapImagePane = new Image();
+            ParentCanvas.Children.Add(MapImagePane);
+
+            Content = ParentCanvas;
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
 
         }
@@ -63,7 +66,9 @@ namespace CPE400Project.MapDisplay
 
         #region Properties
 
-        public Canvas Canvas { get; set; }
+        public Canvas ParentCanvas { get; set; }
+        public Image MapImagePane { get; set; }
+        public BitmapSource MapImage { get; set; }
 
         public static readonly DependencyProperty MapProperty = DependencyProperty.Register("Map", typeof(Map), typeof(MapDisplay));
         public Map Map
@@ -82,16 +87,28 @@ namespace CPE400Project.MapDisplay
 
         public void DrawMap()
         {
-            Random random = new Random();
+            ParentCanvas.Width = Map.Width;
+            ParentCanvas.Height = Map.Height;
 
-            for (int i = 0; i < Map.Width; i++)
-            {
-                for (int j = 0; j < Map.Height; i++)
-                {
 
-                }
-            }
+            PixelFormat pf = PixelFormats.Bgr32;
+
+            int rawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
+            byte[] rawImage = new byte[rawStride * Map.Height];
+
+            Random rand = new Random();
+            rand.NextBytes(rawImage);
+
+            MapImage = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, rawImage, rawStride);
+
+            MapImagePane.Width = Map.Width;
+            MapImagePane.Height = Map.Height;
+
+            MapImagePane.Source = MapImage;
         }
+            
+
+        
 
         #endregion Public Functions
 

@@ -31,7 +31,7 @@ namespace CPE400Project
         {
             InitializeComponent();
 
-            Map = new Map(900, 1600);
+            Map = new Map(450, 800);
             MapGrid.Map = Map;
             DataContext = this;
 
@@ -56,5 +56,11 @@ namespace CPE400Project
 
 
         #endregion Public FUnctions
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Map = new Map(1000, 1920);
+            MapGrid.Map = Map;
+        }
     }
 }

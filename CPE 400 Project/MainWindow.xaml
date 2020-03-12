@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:CPE400Project.MapDisplay"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <StackPanel>
         <local:MapDisplay x:Name="MapGrid" Map="{Binding Path=Map}">
             
         </local:MapDisplay>
-    </Grid>
+        <Button Click="Button_Click" Width="50">Click Me</Button>
+    </StackPanel>
 </Window>

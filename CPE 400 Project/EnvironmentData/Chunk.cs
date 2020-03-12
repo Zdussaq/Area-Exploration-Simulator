@@ -32,5 +32,16 @@ namespace CPE_400_Project.EnvironmentData
         public bool IsHomeBase { get; set; }
 
         #endregion Properties
+
+        #region Public Functions
+
+        public byte GetByte(int location)
+        {
+            int shift = location * 4;
+            return (byte)(0x000F & ((int)Elevation >> shift));
+
+        }
+
+        #endregion Public Functions
     }
 }
