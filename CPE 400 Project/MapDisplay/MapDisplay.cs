@@ -18,33 +18,8 @@ using System.Windows.Shapes;
 namespace CPE400Project.MapDisplay
 {
     /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:CPE_400_Project"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:CPE_400_Project;assembly=CPE_400_Project"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:CustomControl1/>
-    ///
+    /// Creates a display for the drones and current map.
+    /// Non-discovered regions will be shaded gray while discoverd will show elevation
     /// </summary>
     public class MapDisplay : UserControl
     {
@@ -57,7 +32,10 @@ namespace CPE400Project.MapDisplay
             MapImagePane = new Image();
             ParentCanvas.Children.Add(MapImagePane);
 
+            //Make this element's content that of the parent canvas.
+            //this means the user will see the Parent Canvas.
             Content = ParentCanvas;
+
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
 
         }
@@ -65,7 +43,9 @@ namespace CPE400Project.MapDisplay
         #endregion Constructors
 
         #region Properties
-
+        /// <summary>
+        /// Container for all imagedata of the map. Both drones and 
+        /// </summary>
         public Canvas ParentCanvas { get; set; }
         public Image MapImagePane { get; set; }
         public BitmapSource MapImage { get; set; }
@@ -73,7 +53,10 @@ namespace CPE400Project.MapDisplay
         public static readonly DependencyProperty MapProperty = DependencyProperty.Register("Map", typeof(Map), typeof(MapDisplay));
         public Map Map
         {
-            get { return (Map)GetValue(MapProperty); }
+            get
+            { 
+                return (Map)GetValue(MapProperty);
+            }
             set 
             {
                 SetValue(MapProperty, value);
