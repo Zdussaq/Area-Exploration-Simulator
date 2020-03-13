@@ -74,6 +74,7 @@ namespace CPE400Project.MapDisplay
             ParentCanvas.Height = Map.Height;
 
 
+
             PixelFormat pf = PixelFormats.Bgr32;
 
             int rawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
@@ -87,7 +88,50 @@ namespace CPE400Project.MapDisplay
             MapImagePane.Width = Map.Width;
             MapImagePane.Height = Map.Height;
 
-            MapImagePane.Source = MapImage;
+
+            MapImage = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, rawImage, rawStride);
+
+            WriteableBitmap bitmap = new WriteableBitmap(MapImage);
+
+            MapImagePane.Source = bitmap;
+
+        
+            int rawStrideTest = (300 * pf.BitsPerPixel + 7) / 8;
+            byte[] editArea = new byte[rawStrideTest * 300];
+
+            if (Map.Height > 600)
+            {
+                for (int j = 0; j < 100; j++)
+                {
+                    for (int i = 0; i < editArea.Length; i += 4)
+                    {
+                        editArea[i] = 255; //B
+                        editArea[i + 1] = 0; //G
+                        editArea[i + 2] = 255; //R
+                        editArea[i + 3] = 0;
+                    }
+
+                    bitmap.WritePixels(
+                        new Int32Rect(0 + j, 0 + j, 300, 300),
+                        editArea,
+                        rawStrideTest,
+                        0
+                        );
+
+                    MapImagePane.Source = bitmap;
+                }
+            }
+            else
+            {
+                MapImagePane.Source = bitmap;
+
+            }
+
+
+
+            byte[] colorData = { 0, 0, 0, 0 };
+
+
         }
             
 
