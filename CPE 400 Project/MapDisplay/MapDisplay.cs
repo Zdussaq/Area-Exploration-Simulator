@@ -1,4 +1,5 @@
-﻿using CPE400Project.EnvironmentData;
+﻿using CPE_400_Project.EnvironmentData;
+using CPE400Project.EnvironmentData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,8 +74,6 @@ namespace CPE400Project.MapDisplay
             ParentCanvas.Width = Map.Width;
             ParentCanvas.Height = Map.Height;
 
-
-
             PixelFormat pf = PixelFormats.Bgr32;
 
             int rawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
@@ -86,42 +85,12 @@ namespace CPE400Project.MapDisplay
                 {
                     int index = (i * rawStride) + j;
                     int actualJ = j / 4;
-                    float mapElevation = Map[i][actualJ].Elevation;
+                    int BiomeIndex = (int)(10 * Map[i][actualJ].Elevation);
 
-                    if (mapElevation <= 0.5)
+
+                    for (int k = 0; k < 4; k++)
                     {
-                        rawImage[index] = 255;//B
-                        rawImage[index + 1] = 80; //G
-                        rawImage[index + 2] = 0; //R
-                        rawImage[index + 3] = 0;
-                    }
-                    else if (mapElevation <= 0.7)
-                    {
-                        rawImage[index] = 128;//B
-                        rawImage[index + 1] = 178; //G
-                        rawImage[index + 2] = 194; //R
-                        rawImage[index + 3] = 0;
-                    }
-                    else if (mapElevation <= 1.2)
-                    {
-                        rawImage[index] = 82;//B
-                        rawImage[index + 1] = 162; //G
-                        rawImage[index + 2] = 73; //R
-                        rawImage[index + 3] = 0;
-                    }
-                    else if (mapElevation <= 1.5)
-                    {
-                        rawImage[index] = 196;//B
-                        rawImage[index + 1] = 196; //G
-                        rawImage[index + 2] = 196; //R
-                        rawImage[index + 3] = 0;
-                    }
-                    else if (mapElevation <= 2)
-                    {
-                        rawImage[index] = 255;//B
-                        rawImage[index + 1] = 255; //G
-                        rawImage[index + 2] = 255; //R
-                        rawImage[index + 3] = 0;
+                        rawImage[index + k] = ColorScale.BiomeColors[BiomeIndex, k];
                     }
                 }
             }
