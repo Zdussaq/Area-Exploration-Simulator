@@ -16,8 +16,17 @@ namespace CPE_400_Project.DataGeneration
     public static class TerrainGeneration
     {
 
-        public static IList<IList<Chunk>> Generate2DSpace(int width, int height, float[] scales)
+        public static IList<IList<Chunk>> GenerateElevationProfile(int width, int height)
         {
+
+            //These are used as the baseline to generate the map.
+            //Altering these will change the scale of the image
+            //Lower values = larger objects
+            //Higher values = smaller objects
+            //More values = fewer objects
+            float[] scales = new[] { 0.02f, 0.01f, 0.0025f };
+
+            
             IList<IList<Chunk>> MapData = new List<IList<Chunk>>();
             for (var i = 0; i < height; i++)
             {
@@ -32,10 +41,8 @@ namespace CPE_400_Project.DataGeneration
                     }
 
                     elevation /= scales.Length; // Value is now between -1 and 1
-                    
-                    elevation += 1; //0 and 2
-                    elevation = (float)Math.Pow(elevation, 0.7); //smooths the values
-                    elevation *= 128;
+                    elevation += 1;
+                    elevation = (float)Math.Pow(elevation, 5);
                     
 
                     //elevation = (float)Math.Round(((elevation / scales.Length) * 128 + 128), 0);

@@ -31,7 +31,7 @@ namespace CPE400Project
         {
             InitializeComponent();
 
-            Map = new Map(500,500, GetTextBoxInput());
+            Map = new Map(500,500);
             MapGrid.Map = Map;
             DataContext = this;
 
@@ -54,22 +54,12 @@ namespace CPE400Project
 
         #region PublicFunctions
 
-        public float[] GetTextBoxInput()
-        {
-            string[] floats = floatBox.Text.Split(',');
-            float[] finalFloats = new float[floats.Length];
-            for (int i = 0; i < floats.Length; i++)
-            {
-                finalFloats[i] = float.Parse(floats[i].Trim());
-            }
-            return finalFloats;
-        }
 
         #endregion Public FUnctions
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MapGrid.Map = new Map(500,500, GetTextBoxInput());
+            MapGrid.Map = new Map(500,500);
         }
     }
 }

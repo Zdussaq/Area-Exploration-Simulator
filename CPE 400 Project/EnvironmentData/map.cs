@@ -13,9 +13,9 @@ namespace CPE400Project.EnvironmentData
     {
         #region Constructors
 
-        public Map(int height, int width, float[] scales)
+        public Map(int height, int width)
         {
-            GenerateMap(height, width, scales);
+            GenerateMap(height, width);
         }
 
 
@@ -39,61 +39,12 @@ namespace CPE400Project.EnvironmentData
 
         #region Public Functions
 
-        public void GenerateMap(int height, int width, float[] scales)
+        public void GenerateMap(int height, int width)
         {
-            //Create the set
+            //Create the Terrain
             Random random = new Random();
             TerrainGeneration.Seed = random.Next();
-            Chunks = TerrainGeneration.Generate2DSpace(width, height, scales);
-
-            //Adjust the values - first find min and max.
-            float min = 1000000000000;
-            float max = -1;
-            foreach (var i in Chunks)
-            {
-                foreach (var j in i)
-                {
-                    if (j.Elevation > max)
-                    {
-                        max = j.Elevation;
-                    }
-
-                    if (j.Elevation < min)
-                    {
-                        min = j.Elevation;
-                    }
-                }
-            }
-
-            float multiplier = 222 / max;
-
-            foreach (var i in Chunks)
-            {
-                foreach (var j in i)
-                {
-                    j.Elevation *= multiplier;
-                }
-            }
-
-            min = 1000000000000;
-            max = -1;
-            foreach (var i in Chunks)
-            {
-                foreach (var j in i)
-                {
-                    if (j.Elevation > max)
-                    {
-                        max = j.Elevation;
-                    }
-
-                    if (j.Elevation < min)
-                    {
-                        min = j.Elevation;
-                    }
-                }
-            }
-
-            Debug.WriteLine($"Adjusted min: {min}, and max: {max}");
+            Chunks = TerrainGeneration.GenerateElevationProfile(width, height);
 
         }
 
