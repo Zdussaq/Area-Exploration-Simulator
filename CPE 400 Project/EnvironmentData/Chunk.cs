@@ -25,7 +25,7 @@ namespace CPE_400_Project.EnvironmentData
 
         #region Properties
 
-        public float Elevation { get; }
+        public float Elevation { get; set;  }
 
         public bool Explored { get; set; }
 

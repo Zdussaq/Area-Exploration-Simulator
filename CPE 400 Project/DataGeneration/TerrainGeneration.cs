@@ -16,7 +16,7 @@ namespace CPE_400_Project.DataGeneration
     public static class TerrainGeneration
     {
 
-        public static IList<IList<Chunk>> Generate2DSpace(int width, int height, float scale)
+        public static IList<IList<Chunk>> Generate2DSpace(int width, int height, float[] scales)
         {
             IList<IList<Chunk>> MapData = new List<IList<Chunk>>();
             for (var i = 0; i < height; i++)
@@ -24,11 +24,21 @@ namespace CPE_400_Project.DataGeneration
                 IList<Chunk> temp = new List<Chunk>();
                 for (var j = 0; j < width; j++)
                 {
-                    float elevation = (Generate(i * scale, j * scale) * 128 + 128)
-                        + (Generate(i * 0.1f, j * 0.1f) * 128 + 128)
-                        + (Generate(i * 0.25f, j * 0.25f) * 128 + 128);
+                    float elevation = 0;
 
-                    elevation = elevation / 3;
+                    foreach (var scale in scales)
+                    {
+                        elevation += Generate(i * scale, j * scale);
+                    }
+
+                    elevation /= scales.Length; // Value is now between -1 and 1
+                    
+                    elevation += 1; //0 and 2
+                    elevation = (float)Math.Pow(elevation, 0.7); //smooths the values
+                    elevation *= 128;
+                    
+
+                    //elevation = (float)Math.Round(((elevation / scales.Length) * 128 + 128), 0);
                     temp.Add(new Chunk(elevation));
                 }
                 MapData.Add(temp);
@@ -37,7 +47,7 @@ namespace CPE_400_Project.DataGeneration
             float min = 1000000000000;
             float max = -1;
             foreach (var i in MapData)
-            {
+            {   
                 foreach (var j in i)
                 {
                     if (j.Elevation > max)

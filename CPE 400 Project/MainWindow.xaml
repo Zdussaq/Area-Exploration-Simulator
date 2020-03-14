@@ -11,5 +11,7 @@
             
         </local:MapDisplay>
         <Button Click="Button_Click" Width="50">Click Me</Button>
+        <TextBox Width="150" x:Name="floatBox" Text="0.02, 0.01, 0.0025"></TextBox>
     </StackPanel>
+
 </Window>

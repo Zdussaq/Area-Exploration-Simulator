@@ -86,10 +86,22 @@ namespace CPE400Project.MapDisplay
                 {
                     int index = (i * rawStride) + j;
                     int actualJ = j / 4;
-                    rawImage[index] = (byte)Map[i][actualJ].Elevation; //B
-                    rawImage[index + 1] = (byte)Map[i][actualJ].Elevation; //G
-                    rawImage[index + 2] = (byte)Map[i][actualJ].Elevation; //R
-                    rawImage[index + 3] = 0;
+
+                    if (Map[i][actualJ].Elevation < 128)
+                    {
+                        rawImage[index] = 255;//B
+                        rawImage[index + 1] = 80; //G
+                        rawImage[index + 2] = 0; //R
+                        rawImage[index + 3] = 0;
+                    }
+                    else
+                    {
+                        rawImage[index] = (byte)Map[i][actualJ].Elevation;//B
+                        rawImage[index + 1] = (byte)Map[i][actualJ].Elevation; //G
+                        rawImage[index + 2] = (byte)Map[i][actualJ].Elevation; //R
+                        rawImage[index + 3] = 0;
+                    }
+                    
                 }
             }
 
