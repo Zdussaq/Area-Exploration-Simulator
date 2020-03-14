@@ -23,8 +23,10 @@ namespace CPE_400_Project.DataGeneration
             //Altering these will change the scale of the image
             //Lower values = larger objects
             //Higher values = smaller objects
-            //More values = fewer objects
-            float[] scales = new[] { 0.02f, 0.01f, 0.0025f };
+            //More unique values = fewer objects
+            //More dupilcate values = more weighting towards the more common side. 
+            //  Lots of smaller values will yield generally larger objects.
+            float[] scales = new[] { 0.02f, 0.01f, 0.01f, 0.0025f, 0.0025f, 0.0025f, 0.0025f };
 
             
             IList<IList<Chunk>> MapData = new List<IList<Chunk>>();
@@ -50,26 +52,6 @@ namespace CPE_400_Project.DataGeneration
                 }
                 MapData.Add(temp);
             }
-
-            float min = 1000000000000;
-            float max = -1;
-            foreach (var i in MapData)
-            {   
-                foreach (var j in i)
-                {
-                    if (j.Elevation > max)
-                    {
-                        max = j.Elevation;
-                    }
-
-                    if (j.Elevation < min)
-                    {
-                        min = j.Elevation;
-                    }
-                }
-            }
-
-            Debug.WriteLine($"Min: {min}, Max: {max}");
 
             return MapData;
 

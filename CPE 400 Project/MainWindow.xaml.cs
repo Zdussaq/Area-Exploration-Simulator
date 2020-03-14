@@ -31,7 +31,7 @@ namespace CPE400Project
         {
             InitializeComponent();
 
-            Map = new Map(500,500);
+            Map = new Map(1000,1600);
             MapGrid.Map = Map;
             DataContext = this;
 
