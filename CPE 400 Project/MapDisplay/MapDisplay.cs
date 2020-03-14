@@ -80,8 +80,18 @@ namespace CPE400Project.MapDisplay
             int rawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
             byte[] rawImage = new byte[rawStride * Map.Height];
 
-            Random rand = new Random();
-            rand.NextBytes(rawImage);
+            for (int i = 0; i < Map.Height; i++)
+            {
+                for (int j = 0; j < rawStride; j += 4)
+                {
+                    int index = (i * rawStride) + j;
+                    int actualJ = j / 4;
+                    rawImage[index] = (byte)Map[i][actualJ].Elevation; //B
+                    rawImage[index + 1] = (byte)Map[i][actualJ].Elevation; //G
+                    rawImage[index + 2] = (byte)Map[i][actualJ].Elevation; //R
+                    rawImage[index + 3] = 0;
+                }
+            }
 
             MapImage = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, rawImage, rawStride);
 
@@ -95,7 +105,7 @@ namespace CPE400Project.MapDisplay
 
             MapImagePane.Source = bitmap;
 
-        
+            /*
             int rawStrideTest = (300 * pf.BitsPerPixel + 7) / 8;
             byte[] editArea = new byte[rawStrideTest * 300];
 
@@ -130,7 +140,7 @@ namespace CPE400Project.MapDisplay
 
 
             byte[] colorData = { 0, 0, 0, 0 };
-
+            */
 
         }
             

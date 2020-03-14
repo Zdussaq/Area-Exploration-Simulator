@@ -14,7 +14,7 @@ namespace CPE_400_Project.EnvironmentData
     {
         #region Constructors
 
-        public Chunk(int elevation, bool isHomeBase = false)
+        public Chunk(float elevation, bool isHomeBase = false)
         {
             Elevation = elevation;
             Explored = false;

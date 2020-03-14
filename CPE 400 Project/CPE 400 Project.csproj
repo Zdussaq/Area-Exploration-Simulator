@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataGeneration\TerrainGeneration.cs" />
     <Compile Include="EnvironmentData\Chunk.cs" />
     <Compile Include="EnvironmentData\Map.cs" />
     <Compile Include="MapDisplay\MapDisplay.cs" />

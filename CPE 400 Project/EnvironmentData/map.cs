@@ -1,4 +1,5 @@
-﻿using CPE_400_Project.EnvironmentData;
+﻿using CPE_400_Project.DataGeneration;
+using CPE_400_Project.EnvironmentData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,17 +40,8 @@ namespace CPE400Project.EnvironmentData
 
         public void GenerateMap(int height, int width)
         {
-            Chunks = new List<IList<Chunk>>();
-
-            for (int i = 0; i < height; i++)
-            {
-                IList<Chunk> tempList = new List<Chunk>();
-                for (int j = 0; j < width; j++)
-                {
-                    tempList.Add(new Chunk(166671276));
-                }
-                Chunks.Add(tempList);
-            }
+            TerrainGeneration.Seed = 209323094;
+            Chunks = TerrainGeneration.Generate2DSpace(width, height, 0.01f);
         }
 
         #endregion Public Fucntions
