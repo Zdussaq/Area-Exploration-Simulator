@@ -41,9 +41,9 @@ namespace CPE_400_Project.DataGeneration
                     }
 
                     elevation /= scales.Length; // Value is now between -1 and 1
-                    elevation += 1;
-                    elevation = (float)Math.Pow(elevation, 5);
-                    
+                    elevation = (elevation + 1) / 2;
+                    elevation = (float)Math.Pow(elevation, 1.5);
+
 
                     //elevation = (float)Math.Round(((elevation / scales.Length) * 128 + 128), 0);
                     temp.Add(new Chunk(elevation));
