@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CPE_400_Project.EnvironmentData
 {
+    /// <summary>
+    /// Struct used to define the colours in map display.
+    /// </summary>
     public struct ColorScale
     {
         public static byte[,] BiomeColors
@@ -26,7 +29,8 @@ namespace CPE_400_Project.EnvironmentData
                     { 175, 208, 190, 0 }, //Desert, .7
                     { 175, 208, 190, 0 }, //Desert, .8
                     { 213, 208, 240, 0 }, //Snow, .9
-                    { 213, 208, 240, 0 } //Snow, 1
+                    { 213, 208, 240, 0 }, //Snow, 1
+                    { 000, 000, 000, 0 }, //Unexplored 11
                 };
             }
         }

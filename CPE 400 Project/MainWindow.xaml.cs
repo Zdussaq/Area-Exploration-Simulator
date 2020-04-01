@@ -31,6 +31,7 @@ namespace CPE400Project
         {
             InitializeComponent();
 
+            //Initialize a map to test.
             Map = new Map(1000,1600);
             MapGrid.Map = Map;
             DataContext = this;
@@ -57,6 +58,7 @@ namespace CPE400Project
 
         #endregion Public FUnctions
 
+        //Button for testing map. Will be removed later.
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MapGrid.Map = new Map(500,500);

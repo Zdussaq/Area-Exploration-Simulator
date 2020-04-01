@@ -14,33 +14,33 @@ namespace CPE_400_Project.EnvironmentData
     {
         #region Constructors
 
-        public Chunk(float elevation, bool isHomeBase = false)
+        public Chunk(float elevation)
         {
             Elevation = elevation;
             Explored = false;
-            IsHomeBase = isHomeBase;
         }
 
         #endregion Constructors
 
         #region Properties
 
+        /// <summary>
+        /// Value from 0 to 1, incremented by .1 ranges. This is used to define elevation of each pixel in map.
+        /// </summary>
         public float Elevation { get; set;  }
 
+        /// <summary>
+        /// Defines wether or not the location has been mapped by drone.
+        /// True = Has been seen and will display by elevation
+        /// False = Has not been seen, and will display black
+        /// </summary>
         public bool Explored { get; set; }
-
-        public bool IsHomeBase { get; set; }
 
         #endregion Properties
 
         #region Public Functions
 
-        public byte GetByte(int location)
-        {
-            int shift = location * 4;
-            return (byte)(0x000F & ((int)Elevation >> shift));
-
-        }
+        
 
         #endregion Public Functions
     }

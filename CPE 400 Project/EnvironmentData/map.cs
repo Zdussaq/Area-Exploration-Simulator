@@ -23,13 +23,23 @@ namespace CPE400Project.EnvironmentData
 
         #region Properties
 
+        /// <summary>
+        /// 2D List of data in class. 
+        /// </summary>
         public IList<IList<Chunk>> Chunks { get; set; }
 
+
+        /// <summary>
+        /// Width of the image in pixels
+        /// </summary>
         public int Width
         {
             get { return Chunks[0].Count; }
         }
 
+        /// <summary>
+        /// Height of the image in pixels
+        /// </summary>
         public int Height
         {
             get { return Chunks.Count; }
@@ -39,6 +49,11 @@ namespace CPE400Project.EnvironmentData
 
         #region Public Functions
 
+        /// <summary>
+        /// Randomly generates the map to specifications. Uses noise as generation method.
+        /// </summary>
+        /// <param name="height">Height in pixels for map</param>
+        /// <param name="width">Width in pixels for map</param>
         public void GenerateMap(int height, int width)
         {
             //Create the Terrain
@@ -51,7 +66,12 @@ namespace CPE400Project.EnvironmentData
         #endregion Public Fucntions
 
         #region Overides
-
+        /// <summary>
+        /// Indexing method for map class - will return reference to internal chunk array.
+        /// Can access data like: [x][y] with this.
+        /// </summary>
+        /// <param name="key">Index of X coordinate to access.</param>
+        /// <returns></returns>
         public IList<Chunk> this[int key]
         {
             get
