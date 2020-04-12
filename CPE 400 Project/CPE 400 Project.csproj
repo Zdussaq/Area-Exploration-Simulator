@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Controller\ClassController.cs" />
     <Compile Include="DataGeneration\TerrainGeneration.cs" />
+    <Compile Include="Drone\Drone.cs" />
     <Compile Include="EnvironmentData\Chunk.cs" />
     <Compile Include="EnvironmentData\ColorScale.cs" />
     <Compile Include="EnvironmentData\Map.cs" />
