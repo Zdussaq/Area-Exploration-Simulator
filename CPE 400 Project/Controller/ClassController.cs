@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CPE_400_Project.EnvironmentData;
+using CPE400Project.MapDisplay;
 
 namespace CPE_400_Project.Controller
 {
@@ -13,27 +14,54 @@ namespace CPE_400_Project.Controller
     /// </summary>
     public class ClassController
     {
-        //IList could potentially store all current locations of the drones: (xCoord, yCoord) per drone
-        public IList<float> currentLocation { get; set; }
+        //IList that will store X coordinates of drones
+        public IList<float> currentXCoords { get; set; }
+        //IList that will store Y coordinates of drones
+        public IList<float> currentYCoords { get; set; }
+        //IList that will store all drone's battery levels
+        public IList<float> droneBatteries { get; set; }
 
         //Constant running functions
-        public void callController()
+        
+        //GENERAL UPDATE FUNCTION OF CONTROLLER
+        //Function will update all drone properties as well as map properties
+        public void controllerUpdate()
         {
-            //class ideas: should access data available in MapDisplay?
-                        // should interact with future Drone class (gather & update coordinates frequently)
-                        // should constantly update parts of map to go from black to colored when discovered
+            updateDrone();
+            updateMap();
+            determineFlight();
         }
 
-        //Functions to calculate algorithm for where the drones should travel
+        //Function that will update the controller with the current coordinates of each drone
+        //and the drones battery life
+        public void updateDrone()
+        {
+            //updateDroneCoords(/*will take in drone coordinate IList (both x IList and y IList)*/);
+        }
+
+        //Function that will update both X and Y coordinates of each drone
+        public void updateDroneCoords(IList<float> xCoords, IList<float> yCoords)
+        {
+            currentXCoords = xCoords;
+            currentYCoords = yCoords;
+        }
+
+        //Function that will update all drone's battery levels
+        public void updateDroneBatteries(IList<float> currentDroneBatteries)
+        {
+            droneBatteries = currentDroneBatteries;
+        }
+
+        //Function to calculate algorithm for where the drones should travel
         public void determineFlight(/*access to Drone class here*/)
         {
             //Reveal all parts of map within 20 points of the drone's path?
         }
 
-        //Function that will update the current coordinates of each drone with the controller
-        public void updateFlightCoordinates(IList<float> currentCoords)
+        //Function that will call Dean's Map.updateView() function
+        public void updateMap()
         {
-            currentCoords = currentLocation;
+            
         }
     }
 }
