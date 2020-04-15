@@ -63,6 +63,14 @@ namespace CPE400Project.MapDisplay
         /// </summary>
         public WriteableBitmap MapImage { get; set; }
 
+        /// <summary>
+        /// This is the radius a drone can see in pixels. Default will 10 Pixels
+        /// </summary>
+        public int DroneVision { get { return 10; } set { this.DroneVision = value; } }
+
+        public int RawStride { get; set; }
+        public byte[] RawImage { get; set; }
+
         #endregion Properties
 
         #region Dependency Properties
@@ -77,7 +85,7 @@ namespace CPE400Project.MapDisplay
             { 
                 return (Map)GetValue(MapProperty);
             }
-            set 
+            set     
             {
                 SetValue(MapProperty, value);
                 DrawMap();
@@ -85,9 +93,74 @@ namespace CPE400Project.MapDisplay
         }
 
 
+
+
+
         #endregion Dependency Properties
 
         #region Public Functions
+
+        public void MarkRegionExplored(int x, int y)
+        {
+            //First mark a sphere as explored
+            for (int i = 0; i < DroneVision; i++)
+            {
+                for (double j = 0; j < 360; j += 0.1)
+                {
+                    int xMod = (int)(Math.Cos(j * Math.PI / 180) * i);
+                    int yMod = (int)(Math.Sin(j * Math.PI / 180) * i);
+
+
+                    if (xMod + x > 0 || xMod + x <= Map.Width
+                        || yMod + y > 0 || yMod + y <= Map.Height )
+                    {
+                        Map[xMod + x][yMod + y].Explored = true;
+                    }
+                }
+            
+            }
+
+            DrawMap();
+
+            ////Next we need to update the mapitself
+            //int drawArea = (int)Math.Pow((DroneVision * 2 + 1), 2);
+            //byte[] editArea = new byte[RawStride * drawArea];
+
+            //int imageCenter = (y * RawStride * x) + x;
+            //int start = imageCenter - (((drawArea * RawStride) / 2) + 1);
+                                          
+            //for ( int i = 0; i < editArea.Length; i+= 4)
+            //{
+            //    editArea[i] = RawImage[i + 0]; //B
+            //    editArea[i + 1] = RawImage[i + 1]; //G
+            //    editArea[i + 2] = RawImage[i + 2]; //R
+            //    editArea[i + 3] = RawImage[i + 3];
+            //}
+
+            //MapImage.WritePixels(
+            //        new Int32Rect(x, y, DroneVision * 2 + 1, DroneVision * 2 + 1),
+            //        editArea,
+            //        RawStride,
+            //        0
+            //        );
+
+            //MapImagePane.Source = MapImage;
+
+            //for (int j = 0; j < 100; j++)
+            //{
+            //    for (int i = 0; i < editArea.Length; i += 4)
+            //    {
+            //        editArea[i] = 255; //B
+            //        editArea[i + 1] = 0; //G
+            //        editArea[i + 2] = 255; //R
+            //        editArea[i + 3] = 0;
+            //    }
+
+                
+            //}
+
+
+        }
 
         /// <summary>
         /// Code to draw and place the map.
@@ -104,16 +177,16 @@ namespace CPE400Project.MapDisplay
 
             PixelFormat pf = PixelFormats.Bgr32;
 
-            int rawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
-            byte[] rawImage = new byte[rawStride * Map.Height];
+            RawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
+            RawImage = new byte[RawStride * Map.Height];
 
 
             //Next use those parameters to populate the array and define each pixel's colour.
             for (int i = 0; i < Map.Height; i++)
             {
-                for (int j = 0; j < rawStride; j += 4)
+                for (int j = 0; j < RawStride; j += 4)
                 {
-                    int index = (i * rawStride) + j;
+                    int index = (i * RawStride) + j;
                     int actualJ = j / 4;
 
                     if (Map[i][actualJ].Explored)
@@ -124,7 +197,7 @@ namespace CPE400Project.MapDisplay
 
                         for (int k = 0; k < 4; k++)
                         {
-                            rawImage[index + k] = ColorScale.BiomeColors[BiomeIndex, k];
+                            RawImage[index + k] = ColorScale.BiomeColors[BiomeIndex, k];
                         }
                     }
 
@@ -132,7 +205,7 @@ namespace CPE400Project.MapDisplay
                     {
                         for (int k = 0; k < 4; k++)
                         {
-                            rawImage[index + k] = ColorScale.BiomeColors[11, k];
+                            RawImage[index + k] = ColorScale.BiomeColors[11, k];
                         }
                     }
                 }
@@ -144,50 +217,11 @@ namespace CPE400Project.MapDisplay
             MapImagePane.Width = Map.Width;
             MapImagePane.Height = Map.Height;
             
-            baseMap = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, rawImage, rawStride);
+            baseMap = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, RawImage, RawStride);
 
             WriteableBitmap bitmap = new WriteableBitmap(baseMap);
 
             MapImagePane.Source = bitmap;
-
-
-            /*
-             * PREVIOUS CODE FOR HOW TO EDIT THE WRITABLE BITMAP - KEPT FOR REFERENCE
-            int rawStrideTest = (300 * pf.BitsPerPixel + 7) / 8;
-            byte[] editArea = new byte[rawStrideTest * 300];
-
-            if (Map.Height > 600)
-            {
-                for (int j = 0; j < 100; j++)
-                {
-                    for (int i = 0; i < editArea.Length; i += 4)
-                    {
-                        editArea[i] = 255; //B
-                        editArea[i + 1] = 0; //G
-                        editArea[i + 2] = 255; //R
-                        editArea[i + 3] = 0;
-                    }
-
-                    bitmap.WritePixels(
-                        new Int32Rect(0 + j, 0 + j, 300, 300),
-                        editArea,
-                        rawStrideTest,
-                        0
-                        );
-
-                    MapImagePane.Source = bitmap;
-                }
-            }
-            else
-            {
-                MapImagePane.Source = bitmap;
-
-            }
-
-
-
-            byte[] colorData = { 0, 0, 0, 0 };
-            */
 
         }
             

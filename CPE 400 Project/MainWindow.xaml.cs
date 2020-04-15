@@ -36,7 +36,7 @@ namespace CPE400Project
             MapGrid.Map = Map;
             DataContext = this;
 
-
+            MapGrid.MarkRegionExplored(500, 500);
 
         }
 
