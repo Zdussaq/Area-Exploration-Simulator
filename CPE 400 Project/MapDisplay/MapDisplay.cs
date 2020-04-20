@@ -1,4 +1,5 @@
-﻿using CPE_400_Project.EnvironmentData;
+﻿using CPE_400_Project.Drone;
+using CPE_400_Project.EnvironmentData;
 using CPE400Project.EnvironmentData;
 using System;
 using System.Collections.Generic;
@@ -62,14 +63,16 @@ namespace CPE400Project.MapDisplay
         /// This will be the 2d image. Writeable bitmap allows for editing of small regions - something that will need to happen often.
         /// </summary>
         public WriteableBitmap MapImage { get; set; }
-
+        
         /// <summary>
         /// This is the radius a drone can see in pixels. Default will 10 Pixels
         /// </summary>
         public int DroneVision { get { return 10; } set { this.DroneVision = value; } }
 
+        /// <summary>
+        /// This is the width of the map multiplied by the width in bytes of the RGB scale
+        /// </summary>
         public int RawStride { get; set; }
-        public byte[] RawImage { get; set; }
 
         #endregion Properties
 
@@ -100,6 +103,11 @@ namespace CPE400Project.MapDisplay
 
         #region Public Functions
 
+        /// <summary>
+        /// This will mark a region explored in a radius surrounding the centerpoint: x, y
+        /// </summary>
+        /// <param name="x">Position in the map on the x - coordinate to update</param>
+        /// <param name="y">Position in the map on the y - coordinate to update</param>
         public void MarkRegionExplored(int x, int y)
         {
             //First mark a sphere as explored
@@ -111,8 +119,8 @@ namespace CPE400Project.MapDisplay
                     int yMod = (int)(Math.Sin(j * Math.PI / 180) * i);
 
 
-                    if (xMod + x > 0 || xMod + x <= Map.Width
-                        || yMod + y > 0 || yMod + y <= Map.Height )
+                    if (xMod + x > 0 && xMod + x <= Map.Width
+                        && yMod + y > 0 && yMod + y <= Map.Height )
                     {
                         Map[xMod + x][yMod + y].Explored = true;
                     }
@@ -120,46 +128,61 @@ namespace CPE400Project.MapDisplay
             
             }
 
-            DrawMap();
-
-            ////Next we need to update the mapitself
-            //int drawArea = (int)Math.Pow((DroneVision * 2 + 1), 2);
-            //byte[] editArea = new byte[RawStride * drawArea];
-
-            //int imageCenter = (y * RawStride * x) + x;
-            //int start = imageCenter - (((drawArea * RawStride) / 2) + 1);
-                                          
-            //for ( int i = 0; i < editArea.Length; i+= 4)
-            //{
-            //    editArea[i] = RawImage[i + 0]; //B
-            //    editArea[i + 1] = RawImage[i + 1]; //G
-            //    editArea[i + 2] = RawImage[i + 2]; //R
-            //    editArea[i + 3] = RawImage[i + 3];
-            //}
-
-            //MapImage.WritePixels(
-            //        new Int32Rect(x, y, DroneVision * 2 + 1, DroneVision * 2 + 1),
-            //        editArea,
-            //        RawStride,
-            //        0
-            //        );
-
-            //MapImagePane.Source = MapImage;
-
-            //for (int j = 0; j < 100; j++)
-            //{
-            //    for (int i = 0; i < editArea.Length; i += 4)
-            //    {
-            //        editArea[i] = 255; //B
-            //        editArea[i + 1] = 0; //G
-            //        editArea[i + 2] = 255; //R
-            //        editArea[i + 3] = 0;
-            //    }
-
-                
-            //}
+            int diameter = 2 * DroneVision + 1;
+            int localStride = 4 * diameter;
+            byte[] editArea = new byte[localStride * diameter];
 
 
+
+            for (int i = 0; i < diameter ; i++)
+            {
+                for (int j = 0; j < localStride; j += 4)
+                {
+
+                    //at each point - we need to see if it is discovered in the actual map. 
+                    //first we need to define where we are globally
+                    int actualJ = (j / 4) + (x - DroneVision);
+                    int actualI = i + (y - DroneVision);
+
+                    if (actualJ >= 0 && actualI >= 0)
+                    {
+
+
+
+                        int editAreaIndex = (i * localStride) + j;
+
+                        if (Map[actualJ][actualI].Explored)
+                        {
+
+                            int biomeIndex = (int)(10 * Map[actualJ][actualI].Elevation);
+
+
+                            for (int k = 0; k < 4; k++)
+                            {
+                                editArea[editAreaIndex + k] = ColorScale.BiomeColors[biomeIndex, k];
+                            }
+                        }
+
+                        else
+                        {
+                            for (int k = 0; k < 4; k++)
+                            {
+                                editArea[editAreaIndex + k] = ColorScale.BiomeColors[11, k];
+                            }
+                        }
+                    }
+                }
+            }
+
+            MapImage.WritePixels(
+                    new Int32Rect(x - DroneVision, y - DroneVision, diameter, diameter),
+                    editArea,
+                    localStride,
+                    0
+                    );
+
+            MapImagePane.Source = MapImage;
+           
         }
 
         /// <summary>
@@ -178,7 +201,7 @@ namespace CPE400Project.MapDisplay
             PixelFormat pf = PixelFormats.Bgr32;
 
             RawStride = (Map.Width * pf.BitsPerPixel + 7) / 8;
-            RawImage = new byte[RawStride * Map.Height];
+            byte[] rawImage = new byte[RawStride * Map.Height];
 
 
             //Next use those parameters to populate the array and define each pixel's colour.
@@ -197,7 +220,7 @@ namespace CPE400Project.MapDisplay
 
                         for (int k = 0; k < 4; k++)
                         {
-                            RawImage[index + k] = ColorScale.BiomeColors[BiomeIndex, k];
+                            rawImage[index + k] = ColorScale.BiomeColors[BiomeIndex, k];
                         }
                     }
 
@@ -205,7 +228,7 @@ namespace CPE400Project.MapDisplay
                     {
                         for (int k = 0; k < 4; k++)
                         {
-                            RawImage[index + k] = ColorScale.BiomeColors[11, k];
+                            rawImage[index + k] = ColorScale.BiomeColors[11, k];
                         }
                     }
                 }
@@ -217,11 +240,11 @@ namespace CPE400Project.MapDisplay
             MapImagePane.Width = Map.Width;
             MapImagePane.Height = Map.Height;
             
-            baseMap = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, RawImage, RawStride);
+            baseMap = BitmapSource.Create(Map.Width, Map.Height, 96, 96, pf, null, rawImage, RawStride);
 
-            WriteableBitmap bitmap = new WriteableBitmap(baseMap);
+            MapImage = new WriteableBitmap(baseMap);
 
-            MapImagePane.Source = bitmap;
+            MapImagePane.Source = MapImage;
 
         }
             

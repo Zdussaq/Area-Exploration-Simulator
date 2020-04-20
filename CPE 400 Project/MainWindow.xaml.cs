@@ -36,7 +36,10 @@ namespace CPE400Project
             MapGrid.Map = Map;
             DataContext = this;
 
-            MapGrid.MarkRegionExplored(500, 500);
+            for (int i = 0; i < 200; i++)
+            {
+                MapGrid.MarkRegionExplored(0, 0);
+            }
 
         }
 
@@ -58,10 +61,5 @@ namespace CPE400Project
 
         #endregion Public FUnctions
 
-        //Button for testing map. Will be removed later.
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MapGrid.Map = new Map(500,500);
-        }
     }
 }
