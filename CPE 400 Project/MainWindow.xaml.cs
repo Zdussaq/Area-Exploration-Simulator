@@ -38,7 +38,7 @@ namespace CPE400Project
 
             for (int i = 0; i < 200; i++)
             {
-                MapGrid.MarkRegionExplored(0, 0);
+                MapGrid.MarkRegionExplored(0 + i, 0 + i);
             }
 
         }

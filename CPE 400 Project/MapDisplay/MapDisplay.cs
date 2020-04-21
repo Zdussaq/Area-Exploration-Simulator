@@ -119,30 +119,37 @@ namespace CPE400Project.MapDisplay
                     int yMod = (int)(Math.Sin(j * Math.PI / 180) * i);
 
 
-                    if (xMod + x > 0 && xMod + x <= Map.Width
-                        && yMod + y > 0 && yMod + y <= Map.Height )
+                    if (xMod + x >= 0 && xMod + x <= Map.Width
+                        && yMod + y >= 0 && yMod + y <= Map.Height)
                     {
                         Map[xMod + x][yMod + y].Explored = true;
                     }
                 }
-            
+
             }
 
-            int diameter = 2 * DroneVision + 1;
-            int localStride = 4 * diameter;
-            byte[] editArea = new byte[localStride * diameter];
+            
+            int maxX = (x + DroneVision < Map.Width) ? x + DroneVision : Map.Width;
+            int minX = (x - DroneVision > 0) ? x - DroneVision : 0;
+            int maxY = (y + DroneVision < Map.Height) ? y + DroneVision : Map.Height;
+            int minY = (y - DroneVision > 0) ? y - DroneVision : 0;
+
+            int drawWidth = maxX - minX;
+            int drawHeight = maxY - minY;
+            int localStride = 4 * drawWidth;
+            byte[] editArea = new byte[localStride * drawHeight];
 
 
 
-            for (int i = 0; i < diameter ; i++)
+            for (int i = 0; i < drawHeight; i++)
             {
                 for (int j = 0; j < localStride; j += 4)
                 {
 
                     //at each point - we need to see if it is discovered in the actual map. 
                     //first we need to define where we are globally
-                    int actualJ = (j / 4) + (x - DroneVision);
-                    int actualI = i + (y - DroneVision);
+                    int actualJ = (j / 4) + (x);
+                    int actualI = i + (y);
 
                     if (actualJ >= 0 && actualI >= 0)
                     {
@@ -174,8 +181,11 @@ namespace CPE400Project.MapDisplay
                 }
             }
 
+            int xStart = (x - drawWidth < 0) ? 0 : x - drawWidth;
+            int yStart = (y - drawHeight < 0) ? 0 : y - drawHeight;
+
             MapImage.WritePixels(
-                    new Int32Rect(x - DroneVision, y - DroneVision, diameter, diameter),
+                    new Int32Rect(xStart, yStart, drawWidth, drawHeight),
                     editArea,
                     localStride,
                     0
