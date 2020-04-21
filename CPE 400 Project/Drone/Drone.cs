@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Timers;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace CPE_400_Project.Drone
 {
 	public class Drone

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CPE_400_Project.EnvironmentData;
+//using CPE_400_Project.EnvironmentData;
 using CPE400Project.MapDisplay;
+using CPE_400_Project.Drone;
 
 namespace CPE_400_Project.Controller
 {
@@ -19,9 +20,21 @@ namespace CPE_400_Project.Controller
         //IList that will store Y coordinates of drones
         public IList<float> currentYCoords { get; set; }
         //IList that will store all drone's battery levels
-        public IList<float> droneBatteries { get; set; }
+        public IList<float> currentDroneBatteries { get; set; }
+
+        public IList<Drone> droneList { get; set; }
+
+        MapDisplay map { get; set; }
 
         //Constant running functions
+
+        public ClassController()
+        {
+            currentXCoords = new List<float>();
+            currentYCoords = new List<float>();
+            droneList = new List<Drone>();
+            map = new MapDisplay();
+        }
         
         //GENERAL UPDATE FUNCTION OF CONTROLLER
         //Function will update all drone properties as well as map properties
@@ -36,20 +49,28 @@ namespace CPE_400_Project.Controller
         //and the drones battery life
         public void updateDrone()
         {
-            //updateDroneCoords(/*will take in drone coordinate IList (both x IList and y IList)*/);
+            updateDroneCoords();
+            updateDroneBatteries();
         }
 
         //Function that will update both X and Y coordinates of each drone
-        public void updateDroneCoords(IList<float> xCoords, IList<float> yCoords)
+        public void updateDroneCoords()
         {
-            currentXCoords = xCoords;
-            currentYCoords = yCoords;
+            //droneList = new IList<Drone>();
+            for(int i = 0; i < droneList.Count; i++)
+            {
+                droneList[i].X = currentXCoords[i];
+                droneList[i].Y = currentYCoords[i];
+            }
         }
 
         //Function that will update all drone's battery levels
-        public void updateDroneBatteries(IList<float> currentDroneBatteries)
+        public void updateDroneBatteries()
         {
-            droneBatteries = currentDroneBatteries;
+            for(int i = 0; i < droneList.Count; i++)
+            {
+                droneList[i].battery = currentDroneBatteries[i];
+            }
         }
 
         //Function to calculate algorithm for where the drones should travel
@@ -61,7 +82,7 @@ namespace CPE_400_Project.Controller
         //Function that will call Dean's Map.updateView() function
         public void updateMap()
         {
-            
+           
         }
     }
 }
