@@ -1,13 +1,8 @@
-﻿using System;
+﻿using CPE400Project.MapDisplay;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using CPE_400_Project.EnvironmentData;
-using CPE400Project.MapDisplay;
-using CPE_400_Project.Drone;
+using CPE400Project.Exploration;
 
-namespace CPE_400_Project.Controller
+namespace CPE400Project.Controller
 {
     /// <summary>
     /// Class controller that will determine where the drones will travel,
@@ -24,7 +19,7 @@ namespace CPE_400_Project.Controller
 
         public IList<Drone> droneList { get; set; }
 
-        MapDisplay map { get; set; }
+        MapElement map { get; set; }
 
         //Constant running functions
 
@@ -33,7 +28,7 @@ namespace CPE_400_Project.Controller
             currentXCoords = new List<float>();
             currentYCoords = new List<float>();
             droneList = new List<Drone>();
-            map = new MapDisplay();
+            map = new MapElement();
         }
         
         //GENERAL UPDATE FUNCTION OF CONTROLLER
@@ -69,7 +64,7 @@ namespace CPE_400_Project.Controller
         {
             for(int i = 0; i < droneList.Count; i++)
             {
-                droneList[i].battery = currentDroneBatteries[i];
+                //droneList[i].battery = currentDroneBatteries[i];
             }
         }
 

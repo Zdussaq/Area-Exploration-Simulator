@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPE_400_Project.EnvironmentData
+namespace CPE400Project.EnvironmentData
 {
     /// <summary>
     /// Struct used to define the colours in map display.
@@ -31,6 +31,7 @@ namespace CPE_400_Project.EnvironmentData
                     { 213, 208, 240, 0 }, //Snow, .9
                     { 213, 208, 240, 0 }, //Snow, 1
                     { 000, 000, 000, 0 }, //Unexplored 11
+                    { 0, 0, 255, 0 }, //home base 12
                 };
             }
         }

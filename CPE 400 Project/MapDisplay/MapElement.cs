@@ -1,21 +1,9 @@
-﻿using CPE_400_Project.Drone;
-using CPE_400_Project.EnvironmentData;
-using CPE400Project.EnvironmentData;
+﻿using CPE400Project.EnvironmentData;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CPE400Project.MapDisplay
 {
@@ -23,10 +11,10 @@ namespace CPE400Project.MapDisplay
     /// Creates a display for the drones and current map.
     /// Non-discovered regions will be shaded gray while discoverd will show elevation
     /// </summary>
-    public class MapDisplay : UserControl
+    public class MapElement : UserControl
     {
         #region Constructors
-        public MapDisplay()
+        public MapElement()
         {
             //Create new stackpanel to place objects in. This way it's easier to manage what's in there.
             //Adding a buggon or something for debuggin is easier this way.
@@ -43,7 +31,7 @@ namespace CPE400Project.MapDisplay
             //this means the user will see the Parent Canvas.
             Content = ParentContainer;
 
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MapDisplay), new FrameworkPropertyMetadata(typeof(MapDisplay)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MapElement), new FrameworkPropertyMetadata(typeof(MapElement)));
 
         }
 
@@ -81,7 +69,7 @@ namespace CPE400Project.MapDisplay
         /// This is the map itself - user must allocate one to their desired size and pass it in.
         /// When this value is updated, the map will re-draw.
         /// </summary>
-        public static readonly DependencyProperty MapProperty = DependencyProperty.Register("Map", typeof(Map), typeof(MapDisplay));
+        public static readonly DependencyProperty MapProperty = DependencyProperty.Register("Map", typeof(Map), typeof(MapElement));
         public Map Map
         {
             get
@@ -158,6 +146,13 @@ namespace CPE400Project.MapDisplay
 
                         int editAreaIndex = (i * localStride) + j;
 
+                        if (Map[actualJ][actualI].HomeBase)
+                        {
+                            for (int k = 0; k < 4; k++)
+                            {
+                                editArea[editAreaIndex + k] = ColorScale.BiomeColors[12, k];
+                            }
+                        }
                         if (Map[actualJ][actualI].Explored)
                         {
 
@@ -222,7 +217,15 @@ namespace CPE400Project.MapDisplay
                     int index = (i * RawStride) + j;
                     int actualJ = j / 4;
 
-                    if (Map[i][actualJ].Explored)
+                    if (Map[i][actualJ].HomeBase)
+                    {
+                        for (int k = 0; k < 4; k++)
+                        {
+                            rawImage[index + k] = ColorScale.BiomeColors[12, k];
+                        }
+                    }
+
+                    else if (Map[i][actualJ].Explored)
                     {
 
                         int BiomeIndex = (int)(10 * Map[i][actualJ].Elevation);

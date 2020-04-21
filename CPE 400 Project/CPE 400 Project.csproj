@@ -65,11 +65,12 @@
     </Compile>
     <Compile Include="Controller\ClassController.cs" />
     <Compile Include="DataGeneration\TerrainGeneration.cs" />
-    <Compile Include="Drone\Drone.cs" />
+    <Compile Include="Exploration\Drone.cs" />
     <Compile Include="EnvironmentData\Chunk.cs" />
     <Compile Include="EnvironmentData\ColorScale.cs" />
     <Compile Include="EnvironmentData\Map.cs" />
-    <Compile Include="MapDisplay\MapDisplay.cs" />
+    <Compile Include="EnvironmentData\Region.cs" />
+    <Compile Include="MapDisplay\MapElement.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

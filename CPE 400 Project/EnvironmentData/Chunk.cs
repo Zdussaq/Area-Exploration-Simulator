@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPE_400_Project.EnvironmentData
+namespace CPE400Project.EnvironmentData
 {
     /// <summary>
     /// Represents a pixel area in the map. Will be contained in a 2d Array within the map. 
@@ -17,6 +17,7 @@ namespace CPE_400_Project.EnvironmentData
         public Chunk(float elevation)
         {
             Elevation = elevation;
+            HomeBase = false;
             Explored = false;
         }
 
@@ -35,6 +36,11 @@ namespace CPE_400_Project.EnvironmentData
         /// False = Has not been seen, and will display black
         /// </summary>
         public bool Explored { get; set; }
+
+        /// <summary>
+        /// Defines if the home base is located in this chunk. The base will be a 3x3 region.
+        /// </summary>
+        public bool HomeBase { get; set; }
 
         #endregion Properties
 

@@ -9,6 +9,6 @@
 
 
 
-    <local:MapDisplay x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
+    <local:MapElement x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
 
 </Window>

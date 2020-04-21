@@ -1,5 +1,5 @@
-﻿using CPE_400_Project.DataGeneration;
-using CPE_400_Project.EnvironmentData;
+﻿using CPE400Project.DataGeneration;
+using CPE400Project.EnvironmentData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -60,6 +60,33 @@ namespace CPE400Project.EnvironmentData
             Random random = new Random();
             TerrainGeneration.Seed = random.Next();
             Chunks = TerrainGeneration.GenerateElevationProfile(width, height);
+
+            //Next, define the home base
+            int baseOrigin;
+            if (random.Next() % 2 == 0)
+            {
+                baseOrigin = random.Next() % width;
+                for (int i = 0; i < 7; i++)
+                {
+                    for (int j = baseOrigin; j < baseOrigin + 7; j++)
+                    {
+                        this[i][j].HomeBase = true;
+                    }
+                }
+            }
+            else
+            {
+                baseOrigin = random.Next() % height;
+                for (int i = baseOrigin; i < baseOrigin + 7; i++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        this[i][j].HomeBase = true;
+                    }
+                }
+            }
+
+
 
         }
 

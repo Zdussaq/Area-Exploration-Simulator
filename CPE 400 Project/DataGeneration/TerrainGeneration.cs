@@ -1,4 +1,4 @@
-﻿using CPE_400_Project.EnvironmentData;
+﻿using CPE400Project.EnvironmentData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPE_400_Project.DataGeneration
+namespace CPE400Project.DataGeneration
 {
     /// <summary>
     /// Terain generation for elevation creation using the simplex noise algorithm

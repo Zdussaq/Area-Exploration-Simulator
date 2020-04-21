@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:CPE400Project.MapDisplay">
 
 
-    <Style TargetType="{x:Type local:MapDisplay}">
+    <Style TargetType="{x:Type local:MapElement}">
         
     </Style>
 </ResourceDictionary>
