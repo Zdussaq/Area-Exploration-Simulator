@@ -9,8 +9,43 @@
 
 
     <StackPanel>
-        <local:MapElement x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
-        <Button Click="Button_Click">Press me!</Button>
+        <local:MapElement Visibility="Collapsed" x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right" Grid.Column="0" Text="Drone Vision: "></TextBlock>
+                <TextBox Grid.Column="1" Width="100" HorizontalAlignment="Left"></TextBox>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock  HorizontalAlignment="Right" Grid.Column="1" Text="Number of Drones: " Height="18" VerticalAlignment="Top"></TextBlock>
+                <Slider Name="DroneSlider" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=NumDrones, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="100" Minimum="5" Maximum="25" HorizontalAlignment="Left"></Slider>
+                <TextBlock Width="30" Margin="5, 0, 0 ,0" Grid.Column="3" Text="{Binding ElementName=DroneSlider, Path=Value}"  HorizontalAlignment="Left"></TextBlock>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Width="105" HorizontalAlignment="Right" Grid.Column="1" Text="Drone Battery Life: "></TextBlock>
+                <Slider Name="BatterySlider" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=DroneBattery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="100" Minimum="2000" Maximum="20000" HorizontalAlignment="Left"></Slider>
+                <TextBlock Width="30" Margin="5, 0, 0 ,0" Grid.Column="3" Text="{Binding ElementName=BatterySlider, Path=Value}"  HorizontalAlignment="Left"></TextBlock>
+            </Grid>
+            <Button  Click="Button_Click" Width="100px">Run Simulation</Button>
+        </StackPanel>
+        
     </StackPanel>
 
 </Window>

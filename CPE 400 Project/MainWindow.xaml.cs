@@ -22,7 +22,7 @@ namespace CPE400Project
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
         #region Constructors
@@ -31,18 +31,18 @@ namespace CPE400Project
         {
             InitializeComponent();
 
-            //Initialize a map to test.
-            Map = new Map(1000,1600);
-            MapGrid.Map = Map;
-            DataContext = this;
+            ////Initialize a map to test.
+            //Map = new Map(1000,1600);
+            //MapGrid.Map = Map;
+            //DataContext = this;
 
-            for (i = 0; i < 100; i+=4)
-            {
-                for (j = 0; j < 100; j+= 4)
-                {
-                    MapGrid.MarkRegionExplored(i, j);
-                }
-            }
+            //for (i = 0; i < 100; i+=4)
+            //{
+            //    for (j = 0; j < 100; j+= 4)
+            //    {
+            //        MapGrid.MarkRegionExplored(i, j);
+            //    }
+            //}
 
         }
 
@@ -50,7 +50,25 @@ namespace CPE400Project
 
         #region Properties
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Map Map { get; set; }
+
+
+        private int _numDrones;
+
+        public int NumDrones
+        {
+            get { return _numDrones; }
+            set
+            {
+                if (_numDrones == value)
+                    return;
+
+                _numDrones = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion Properties
 
@@ -66,6 +84,10 @@ namespace CPE400Project
         public int i = 0;
         public int j = 0;
 
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MapGrid.MarkRegionExplored(i, j);
