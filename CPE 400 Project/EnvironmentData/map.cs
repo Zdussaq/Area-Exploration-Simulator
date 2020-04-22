@@ -26,7 +26,7 @@ namespace CPE400Project.EnvironmentData
         /// <summary>
         /// 2D List of data in class. 
         /// </summary>
-        public IList<IList<Chunk>> Chunks { get; set; }
+        public Chunk[,] Chunks { get; set; }
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace CPE400Project.EnvironmentData
         /// </summary>
         public int Width
         {
-            get { return Chunks[0].Count; }
+            get { return Chunks.GetLength(0) - 1; }
         }
 
         /// <summary>
@@ -42,8 +42,10 @@ namespace CPE400Project.EnvironmentData
         /// </summary>
         public int Height
         {
-            get { return Chunks.Count; }
+            get { return Chunks.GetLength(1) - 1; }
         }
+
+        public Region HomeBase { get; set; }
 
         #endregion Properties
 
@@ -65,27 +67,33 @@ namespace CPE400Project.EnvironmentData
             int baseOrigin;
             if (random.Next() % 2 == 0)
             {
-                baseOrigin = random.Next() % width;
-                for (int i = 0; i < 7; i++)
+                baseOrigin = random.Next() % (width - 7);
+
+                                HomeBase = new Region(baseOrigin, baseOrigin + 6, 0, 6);
+
+
+                for (int i = baseOrigin; i < baseOrigin + 7; i++)
                 {
-                    for (int j = baseOrigin; j < baseOrigin + 7; j++)
+                    for (int j = 0; j < 7; j++)
                     {
-                        this[i][j].HomeBase = true;
+                        this[i,j].HomeBase = true;
                     }
                 }
             }
             else
             {
-                baseOrigin = random.Next() % height;
-                for (int i = baseOrigin; i < baseOrigin + 7; i++)
+                baseOrigin = random.Next() % (height - 7);
+
+                HomeBase = new Region(0, 6, baseOrigin, baseOrigin + 6);
+
+                for (int i = 0; i < 7; i++)
                 {
-                    for (int j = 0; j < 3; j++)
+                    for (int j = baseOrigin; j < baseOrigin + 7; j++)
                     {
-                        this[i][j].HomeBase = true;
+                        this[i,j].HomeBase = true;
                     }
                 }
             }
-
 
 
         }
@@ -99,19 +107,19 @@ namespace CPE400Project.EnvironmentData
         /// </summary>
         /// <param name="key">Index of X coordinate to access.</param>
         /// <returns></returns>
-        public IList<Chunk> this[int key]
+        public Chunk this[int x, int y]
         {
             get
             {
-                return Chunks[key];
+                return Chunks[x, y];
             }
             set
             {
-                if (key > Chunks.Count)
+                if (x > Width || y > Height)
                 {
                     throw new IndexOutOfRangeException("Cannot index outside of range of list.");
                 }
-                Chunks[key] = value;
+                Chunks[x, y] = value;
             }
         }
 

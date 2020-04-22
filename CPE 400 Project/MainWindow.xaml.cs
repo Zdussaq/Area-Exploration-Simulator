@@ -36,9 +36,12 @@ namespace CPE400Project
             MapGrid.Map = Map;
             DataContext = this;
 
-            for (int i = 0; i < 200; i++)
+            for (i = 0; i < 100; i+=4)
             {
-                MapGrid.MarkRegionExplored(0 + i, 0 + i);
+                for (j = 0; j < 100; j+= 4)
+                {
+                    MapGrid.MarkRegionExplored(i, j);
+                }
             }
 
         }
@@ -60,6 +63,20 @@ namespace CPE400Project
 
 
         #endregion Public FUnctions
+        public int i = 0;
+        public int j = 0;
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MapGrid.MarkRegionExplored(i, j);
+            i++;
+            j++;MapGrid.MarkRegionExplored(i, j);
+            i++;
+            j++;MapGrid.MarkRegionExplored(i, j);
+            i++;
+            j++;MapGrid.MarkRegionExplored(i, j);
+            i++;
+            j++;
+        }
     }
 }

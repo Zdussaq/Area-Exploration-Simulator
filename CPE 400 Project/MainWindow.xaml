@@ -8,7 +8,9 @@
         Title="MainWindow" Height="450" Width="800">
 
 
-
-    <local:MapElement x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
+    <StackPanel>
+        <local:MapElement x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
+        <Button Click="Button_Click">Press me!</Button>
+    </StackPanel>
 
 </Window>

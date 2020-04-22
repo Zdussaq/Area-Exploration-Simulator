@@ -16,7 +16,7 @@ namespace CPE400Project.DataGeneration
     public static class TerrainGeneration
     {
 
-        public static IList<IList<Chunk>> GenerateElevationProfile(int width, int height)
+        public static Chunk[,] GenerateElevationProfile(int width, int height)
         {
 
             //These are used as the baseline to generate the map.
@@ -28,12 +28,11 @@ namespace CPE400Project.DataGeneration
             //  Lots of smaller values will yield generally larger objects.
             float[] scales = new[] { 0.02f, 0.01f, 0.01f, 0.0025f, 0.0025f, 0.0025f, 0.0025f };
 
-            
-            IList<IList<Chunk>> MapData = new List<IList<Chunk>>();
-            for (var i = 0; i < height; i++)
+
+            Chunk[,] MapData = new Chunk[width, height];
+            for (var i = 0; i < width; i++)
             {
-                IList<Chunk> temp = new List<Chunk>();
-                for (var j = 0; j < width; j++)
+                for (var j = 0; j < height; j++)
                 {
                     float elevation = 0;
 
@@ -44,13 +43,9 @@ namespace CPE400Project.DataGeneration
 
                     elevation /= scales.Length; // Value is now between -1 and 1
                     elevation = (elevation + 1) / 2;
-                    elevation = (float)Math.Pow(elevation, 1.5);
+                    MapData[i,j] = new Chunk((float)Math.Pow(elevation, 1.5));
 
-
-                    //elevation = (float)Math.Round(((elevation / scales.Length) * 128 + 128), 0);
-                    temp.Add(new Chunk(elevation));
                 }
-                MapData.Add(temp);
             }
 
             return MapData;

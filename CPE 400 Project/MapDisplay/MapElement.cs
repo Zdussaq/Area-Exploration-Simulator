@@ -1,5 +1,7 @@
 ﻿using CPE400Project.EnvironmentData;
+using CPE400Project.Exploration;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -43,6 +45,7 @@ namespace CPE400Project.MapDisplay
         /// Stack panel gives easy additions and customizability.
         /// </summary>
         public StackPanel ParentContainer { get; set; }
+        public IList<Drone> Drones { get; set; }
         /// <summary>
         /// This will hold the 2D image. the Writeablebitmap needs to be contained within this.
         /// </summary>
@@ -55,7 +58,7 @@ namespace CPE400Project.MapDisplay
         /// <summary>
         /// This is the radius a drone can see in pixels. Default will 10 Pixels
         /// </summary>
-        public int DroneVision { get { return 10; } set { this.DroneVision = value; } }
+        public int DroneVision { get { return 10; } }
 
         /// <summary>
         /// This is the width of the map multiplied by the width in bytes of the RGB scale
@@ -80,6 +83,7 @@ namespace CPE400Project.MapDisplay
             {
                 SetValue(MapProperty, value);
                 DrawMap();
+                MarkRegionExplored(Map.HomeBase.XCenter, Map.HomeBase.YCenter);
             }
         }
 
@@ -110,7 +114,7 @@ namespace CPE400Project.MapDisplay
                     if (xMod + x >= 0 && xMod + x <= Map.Width
                         && yMod + y >= 0 && yMod + y <= Map.Height)
                     {
-                        Map[xMod + x][yMod + y].Explored = true;
+                        Map[xMod + x, yMod + y].Explored = true;
                     }
                 }
 
@@ -136,8 +140,8 @@ namespace CPE400Project.MapDisplay
 
                     //at each point - we need to see if it is discovered in the actual map. 
                     //first we need to define where we are globally
-                    int actualJ = (j / 4) + (x);
-                    int actualI = i + (y);
+                    int actualJ = (j / 4) + (minX);
+                    int actualI = i + (minY);
 
                     if (actualJ >= 0 && actualI >= 0)
                     {
@@ -146,17 +150,17 @@ namespace CPE400Project.MapDisplay
 
                         int editAreaIndex = (i * localStride) + j;
 
-                        if (Map[actualJ][actualI].HomeBase)
+                        if (Map[actualJ, actualI].HomeBase)
                         {
                             for (int k = 0; k < 4; k++)
                             {
                                 editArea[editAreaIndex + k] = ColorScale.BiomeColors[12, k];
                             }
                         }
-                        if (Map[actualJ][actualI].Explored)
+                        else if (Map[actualJ, actualI].Explored)
                         {
 
-                            int biomeIndex = (int)(10 * Map[actualJ][actualI].Elevation);
+                            int biomeIndex = (int)(10 * Map[actualJ, actualI].Elevation);
 
 
                             for (int k = 0; k < 4; k++)
@@ -176,11 +180,8 @@ namespace CPE400Project.MapDisplay
                 }
             }
 
-            int xStart = (x - drawWidth < 0) ? 0 : x - drawWidth;
-            int yStart = (y - drawHeight < 0) ? 0 : y - drawHeight;
-
             MapImage.WritePixels(
-                    new Int32Rect(xStart, yStart, drawWidth, drawHeight),
+                    new Int32Rect(minX, minY, drawWidth, drawHeight),
                     editArea,
                     localStride,
                     0
@@ -217,7 +218,7 @@ namespace CPE400Project.MapDisplay
                     int index = (i * RawStride) + j;
                     int actualJ = j / 4;
 
-                    if (Map[i][actualJ].HomeBase)
+                    if (Map[actualJ, i].HomeBase)
                     {
                         for (int k = 0; k < 4; k++)
                         {
@@ -225,10 +226,10 @@ namespace CPE400Project.MapDisplay
                         }
                     }
 
-                    else if (Map[i][actualJ].Explored)
+                    else if (Map[actualJ, i].Explored)
                     {
 
-                        int BiomeIndex = (int)(10 * Map[i][actualJ].Elevation);
+                        int BiomeIndex = (int)(10 * Map[i, actualJ].Elevation);
 
 
                         for (int k = 0; k < 4; k++)
@@ -261,7 +262,14 @@ namespace CPE400Project.MapDisplay
 
         }
             
-
+        public void UpdateMap(IList<Drone> drones)
+        {
+            Drones = drones;
+            foreach ( var i in Drones )
+            {
+                MarkRegionExplored((int)i.X, (int)i.Y);
+            }
+        }
         
 
         #endregion Public Functions
