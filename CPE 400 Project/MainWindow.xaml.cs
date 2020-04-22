@@ -31,18 +31,18 @@ namespace CPE400Project
         {
             InitializeComponent();
 
-            ////Initialize a map to test.
-            //Map = new Map(1000,1600);
-            //MapGrid.Map = Map;
-            //DataContext = this;
+            //Initialize a map to test.
+            Map = new Map(1000, 1600);
+            MapGrid.Map = Map;
+            DataContext = this;
 
-            //for (i = 0; i < 100; i+=4)
-            //{
-            //    for (j = 0; j < 100; j+= 4)
-            //    {
-            //        MapGrid.MarkRegionExplored(i, j);
-            //    }
-            //}
+            for (i = 0; i < 100; i += 4)
+            {
+                for (j = 0; j < 100; j += 4)
+                {
+                    MapGrid.MarkRegionExplored(i, j);
+                }
+            }
 
         }
 
@@ -90,15 +90,6 @@ namespace CPE400Project
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MapGrid.MarkRegionExplored(i, j);
-            i++;
-            j++;MapGrid.MarkRegionExplored(i, j);
-            i++;
-            j++;MapGrid.MarkRegionExplored(i, j);
-            i++;
-            j++;MapGrid.MarkRegionExplored(i, j);
-            i++;
-            j++;
         }
     }
 }

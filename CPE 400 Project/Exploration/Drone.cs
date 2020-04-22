@@ -4,6 +4,7 @@ using System.Timers;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CPE400Project.Exploration;
 
 namespace CPE400Project.Exploration
 {
@@ -21,7 +22,7 @@ namespace CPE400Project.Exploration
 		public float windowSize { get; set; }
 		public Timer batteryCountdown { get; set; }
 
-		public Queue<float> Insturctions { get; set; }
+		public IList<Instruction> Instructions { get; set; }
 
 
 		/// <summary>
@@ -61,7 +62,6 @@ namespace CPE400Project.Exploration
 		{
 			battery--;
 			moveDrone(0, 0);
-
 		}
 
 
@@ -130,6 +130,7 @@ namespace CPE400Project.Exploration
 			speed = droneSpeed;
 
 			batteryCountdown = new Timer(battery);
+			Instructions = new List<Instruction>();
 			//batteryCountdown.Tick += update;
 			batteryCountdown.Start();
 

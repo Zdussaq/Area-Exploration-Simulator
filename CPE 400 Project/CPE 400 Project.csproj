@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9F55CBBB-1287-47F0-B633-CB0CC5720D49}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CPE_400_Project</RootNamespace>
+    <RootNamespace>CPE400Project</RootNamespace>
     <AssemblyName>CPE 400 Project</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -65,11 +65,13 @@
     </Compile>
     <Compile Include="Controller\ClassController.cs" />
     <Compile Include="DataGeneration\TerrainGeneration.cs" />
+    <Compile Include="Exploration\Directions.cs" />
     <Compile Include="Exploration\Drone.cs" />
     <Compile Include="EnvironmentData\Chunk.cs" />
     <Compile Include="EnvironmentData\ColorScale.cs" />
     <Compile Include="EnvironmentData\Map.cs" />
     <Compile Include="EnvironmentData\Region.cs" />
+    <Compile Include="Exploration\Instruction.cs" />
     <Compile Include="MapDisplay\MapElement.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

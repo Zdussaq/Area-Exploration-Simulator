@@ -9,8 +9,8 @@
 
 
     <StackPanel>
-        <local:MapElement Visibility="Collapsed" x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
-        <StackPanel>
+        <local:MapElement Visibility="Visible" x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
+        <StackPanel Visibility="Hidden">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
