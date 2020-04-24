@@ -30,30 +30,36 @@ namespace CPE400Project
         public MainWindow()
         {
             InitializeComponent();
-
-            //Initialize a map to test.
-            Map = new Map(1000, 1600);
-            MapGrid.Map = Map;
             DataContext = this;
 
-            for (i = 0; i < 100; i += 4)
-            {
-                for (j = 0; j < 100; j += 4)
-                {
-                    MapGrid.MarkRegionExplored(i, j);
-                }
-            }
+            ////Initialize a map to test.
+            //Map = new Map(1000, 1600);
+            //MapGrid.Map = Map;
+            //DataContext = this;
 
+            //for (i = 0; i < 100; i += 4)
+            //{
+            //    for (j = 0; j < 100; j += 4)
+            //    {
+            //        MapGrid.MarkRegionExplored(i, j);
+            //    }
+            //}
+            
+            DroneVision = 10;
+            
+            NumDrones = 20;
+            MapWidth = Width;
+            MapHeight = Height;
+            OptionsVis = Visibility.Visible;
+            MapVis = Visibility.Collapsed;
+            LoadingVis = Visibility.Collapsed;
+            BatterySlider.Minimum = 2*  Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
+            DroneBattery = 2 * (int)BatterySlider.Minimum;
         }
 
         #endregion Constructors
 
-        #region Properties
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Map Map { get; set; }
-
+        #region Binding Properties
 
         private int _numDrones;
 
@@ -70,6 +76,125 @@ namespace CPE400Project
             }
         }
 
+        private int _droneBattery;
+
+        public int DroneBattery
+        {
+            get { return _droneBattery; }
+            set
+            {
+                if (_droneBattery == value)
+                    return;
+
+                _droneBattery = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _droneVision;
+
+        public int DroneVision
+        {
+            get { return _droneVision; }
+            set
+            {
+                if (_droneVision == value)
+                    return;
+
+                _droneVision = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _mapWidth;
+
+        public double MapWidth
+        {
+            get { return _mapWidth; }
+            set
+            {
+                if (_mapWidth == value)
+                    return;
+
+                _mapWidth = value;
+
+                BatterySlider.Minimum = (int)(2 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2))) + 1;
+                BatterySlider.Maximum = (BatterySlider.Minimum > 20000) ? 3 * BatterySlider.Minimum : 20000;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _mapHeight;
+
+        public double MapHeight
+        {
+            get { return _mapHeight; }
+            set
+            {
+                if (_mapHeight == value)
+                    return;
+
+                _mapHeight = value;
+
+                BatterySlider.Minimum = 2 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
+                BatterySlider.Maximum = (BatterySlider.Minimum > 20000) ? 3 * BatterySlider.Minimum : 20000;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _mapVis;
+        public Visibility MapVis
+        {
+            get { return _mapVis; }
+            set
+            {
+                if (_mapVis == value)
+                    return;
+
+                _mapVis = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _optionsVis;
+        public Visibility OptionsVis
+        {
+            get { return _optionsVis; }
+            set
+            {
+                if (_optionsVis == value)
+                    return;
+
+                _optionsVis = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _loadingVis;
+        public Visibility LoadingVis
+        {
+            get { return _loadingVis; }
+            set
+            {
+                if (_loadingVis == value)
+                    return;
+
+                _loadingVis = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion Binding Properties
+
+        #region Properties
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Map Map { get; set; }
+
+
+        
+
         #endregion Properties
 
         #region PrivateFunctions
@@ -81,15 +206,28 @@ namespace CPE400Project
 
 
         #endregion Public FUnctions
-        public int i = 0;
-        public int j = 0;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BeginSimulation(object sender, RoutedEventArgs e)
         {
+            OptionsVis = Visibility.Collapsed;
+            LoadingVis = Visibility.Visible;
+
+            Map = new Map((int)MapHeight, (int)MapWidth);
+            MapGrid.DroneVision = DroneVision;
+            MapGrid.Map = Map;
+
+            LoadingVis = Visibility.Collapsed;
+            MapVis = Visibility.Visible;
+        }
+
+        private void CreateMap()
+        {
+            
+
         }
     }
 }

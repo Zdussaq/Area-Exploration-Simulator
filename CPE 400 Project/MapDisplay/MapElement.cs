@@ -58,7 +58,7 @@ namespace CPE400Project.MapDisplay
         /// <summary>
         /// This is the radius a drone can see in pixels. Default will 10 Pixels
         /// </summary>
-        public int DroneVision { get { return 10; } }
+        public int DroneVision { get; set; }
 
         /// <summary>
         /// This is the width of the map multiplied by the width in bytes of the RGB scale
