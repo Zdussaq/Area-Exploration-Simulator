@@ -45,7 +45,7 @@ namespace CPE400Project
             //    }
             //}
             
-            DroneVision = 10;
+            DroneVision = 15;
             
             NumDrones = 20;
             MapWidth = Width;
@@ -222,12 +222,15 @@ namespace CPE400Project
 
             LoadingVis = Visibility.Collapsed;
             MapVis = Visibility.Visible;
+
+            MapGrid.MarkRegionExplored(100, 100);
+            MapGrid.MarkDrone(100, 100);
+
+            MapGrid.MarkRegionExplored(200, 200);
+            MapGrid.MarkDrone(200, 200);
+            MapGrid.MarkRegionExplored(201, 201);
+            MapGrid.MarkDrone(201, 201);
         }
 
-        private void CreateMap()
-        {
-            
-
-        }
     }
 }

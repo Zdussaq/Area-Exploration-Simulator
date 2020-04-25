@@ -95,6 +95,37 @@ namespace CPE400Project.MapDisplay
 
         #region Public Functions
 
+        public void MarkDrone(int x, int y)
+        {
+
+            const int droneSize = 5;
+            const int droneRadius = (int)droneSize / 2;
+
+            int maxX = (x + droneRadius < Map.Width) ? x + droneRadius : Map.Width;
+            int minX = (x - droneRadius > 0) ? x - droneRadius : 0;
+            int maxY = (y + droneRadius < Map.Height) ? y + droneRadius : Map.Height;
+            int minY = (y - droneRadius > 0) ? y - droneRadius : 0;
+
+            int drawWidth = maxX - minX;
+            int drawHeight = maxY - minY;
+            int localStride = 4 * drawWidth;
+            byte[] editArea = new byte[localStride * drawHeight];
+
+            for (int i = 0; i < editArea.Length; i++)
+            {
+                editArea[i] = 000;
+            }
+
+            MapImage.WritePixels(
+                    new Int32Rect(minX, minY, drawWidth, drawHeight),
+                    editArea,
+                    localStride,
+                    0
+                    );
+
+            MapImagePane.Source = MapImage;
+        }
+
         /// <summary>
         /// This will mark a region explored in a radius surrounding the centerpoint: x, y
         /// </summary>
@@ -268,6 +299,7 @@ namespace CPE400Project.MapDisplay
             foreach ( var i in Drones )
             {
                 MarkRegionExplored((int)i.X, (int)i.Y);
+                MarkDrone((int)i.X, (int)i.Y);
             }
         }
         
