@@ -19,41 +19,9 @@ namespace CPE400Project.Exploration
 		public float startX { get; set; }
 		public float startY { get; set; }
 		public float speed { get; set; }
-		public float windowSize { get; set; }
 		public Timer batteryCountdown { get; set; }
-
 		public IList<Instruction> Instructions { get; set; }
 
-
-		/// <summary>
-		/// Calculate the distance from the starting position to the current position, not square rooted
-		/// </summary>
-		public float distFromStart()
-		{
-			float distance = 0;
-			distance = ((startX - X) * (startX - X)) + ((startY - Y) * (startY - Y));
-			return distance;
-		}
-
-		/// <summary>
-		/// Immediately return from current point to starting point
-		/// </summary>
-		public void returnToBase()//starting coordinates 
-		{
-			while (X != startX && Y != startY)
-			{
-				if (X > startX)
-				{ X--; }
-				else
-				{ X++; }
-
-				if (Y > startY)
-				{ Y--; }
-				else
-				{ Y++; }
-			}
-
-		}
 
 		/// <summary>
 		/// Reduce the battery amount every second by 1, starts at 100
@@ -61,7 +29,7 @@ namespace CPE400Project.Exploration
 		public void update(object sender, ElapsedEventArgs e)
 		{
 			battery--;
-			moveDrone(0, 0);
+			executeInstruction();
 		}
 
 
@@ -81,62 +49,71 @@ namespace CPE400Project.Exploration
 
 		}
 
-		/// <summary>
-		/// Compares time remaining to distance / speed to know if it can return to base
-		/// </summary>
-		public bool sufficentBattery()
-		{
-			if (battery > (distFromStart() / speed) + 1)
+
+		void executeInstruction(){
+
+			if(Instructions != null)
 			{
-				return true;
+				units = Instructions[0].NumUnits;
+				
+				switch(Instructions[0].Direction)
+				{
+					case 1:
+						Y+ units;
+						break;
+					case 2:
+						Y+ units;
+						X+ units;
+						break;
+					case 3:
+						X+ units;
+						break;
+					case 4:
+						Y- units;
+						X+ units;
+						break;
+					case 5:
+						Y- units;
+					case 6:
+						Y- units;
+						X- units;
+						break;
+					case 7:
+						X- units;
+						break;
+					case 8:
+						Y+ units;
+						X- units;
+						break;
+				
+				}
+			
+				Instructions.RemoveAt(0);
+
 			}
 			else
 			{
-				return false;
+				//no more instructions
+				//time to delete object
+				//return value and then how to remove object?
+			
+			
 			}
-		}
-
-		/// <summary>
-		/// Move drone in any direction until the desired x and y are reached
-		/// </summary>
-		public void moveDrone(int untilX, int untilY)
-		{
-			while (Y != untilY)
-			{
-				if (Y > untilY)
-				{ Y--; }
-				else
-				{ Y++; }
-
-			}
-
-			while (X != untilX)
-			{
-				if (X > untilX)
-				{ X--; }
-				else
-				{ X++; }
-			}
-
-
+				
+		
 		}
 
 		/// <summary>
 		/// Constructor of the drone class
 		/// </summary>
-		public Drone(int X, int Y, int droneSpeed)
+		public Drone(int X, int Y, int batteryLife)
 		{
-			battery = 100;
-			speed = droneSpeed;
+			battery = batteryLife;
 
 			batteryCountdown = new Timer(battery);
 			Instructions = new List<Instruction>();
 			//batteryCountdown.Tick += update;
 			batteryCountdown.Start();
-
-			while (sufficentBattery()) { }
-			returnToBase();
-			//call destructor
 
 		}
 	}
