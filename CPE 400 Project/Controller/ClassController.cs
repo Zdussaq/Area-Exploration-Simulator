@@ -95,10 +95,53 @@ namespace CPE400Project.Controller
             //define relative 0 per drone
             //create instruction set
 
+            //bool finished = false;
+
             int numDrones = droneList.Count;
             int sectionWidth = map.Map.Width / numDrones;
 
-            
+            for(int i = 0; i < droneList.Count; i++)
+            {
+                int startX = sectionWidth * i;
+                int startY = 3;
+
+                int currentX = droneList[i].X;
+                int currentY = droneList[i].Y;
+
+                int battery = droneList[i].battery;
+
+                IList<Instruction> list = mapTo(currentX, currentY, startX, startY);
+                battery -= calculateBatteryUsage(list);
+
+                foreach(var k in list)
+                {
+                    droneList[i].Instructions.Add(k);
+                }
+
+                currentX = startX;
+                currentY = startY;
+
+                droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.E));
+                currentX += sectionWidth;
+                
+                if(currentY < map.Map.Height)
+                {
+                    droneList[i].Instructions.Add(new Instruction(5, Directions.N));
+                    currentY += 5;
+                    droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.W));
+                }
+                else
+                {
+                    //
+                }
+                //droneList[i].Instructions.Add(new Instruction(5, Directions.N));
+            }
+
+        }
+
+        public int calculateDistanceToHome(int startX, int startY)
+        {
+            return calculateBatteryUsage(mapTo(startX, startY, map.Map.HomeBase.XCenter, map.Map.HomeBase.YCenter));
         }
 
         public int calculateBatteryUsage(IList<Instruction> instructions)
