@@ -1,4 +1,6 @@
-﻿using CPE400Project.EnvironmentData;
+﻿using CPE400Project.Controller;
+using CPE400Project.EnvironmentData;
+using CPE400Project.Exploration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -192,6 +194,7 @@ namespace CPE400Project
 
         public Map Map { get; set; }
 
+        public ClassController Controller { get; set; }
 
         
 
@@ -215,21 +218,29 @@ namespace CPE400Project
         {
             OptionsVis = Visibility.Collapsed;
             LoadingVis = Visibility.Visible;
+            UpdateLayout();
 
             Map = new Map((int)MapHeight, (int)MapWidth);
             MapGrid.DroneVision = DroneVision;
             MapGrid.Map = Map;
 
+            IList<Drone> drones = new List<Drone>();
+            int startX = MapGrid.Map.HomeBase.XCenter;
+            int startY = MapGrid.Map.HomeBase.YCenter;
+            for (int i = 0; i < NumDrones; i++)
+            {
+                drones.Add(new Drone(startX, startY, DroneBattery));
+            }
+
+            this.Controller = new ClassController(MapGrid, drones);
+            
+
             LoadingVis = Visibility.Collapsed;
             MapVis = Visibility.Visible;
+            UpdateLayout();
 
-            MapGrid.MarkRegionExplored(100, 100);
-            MapGrid.MarkDrone(100, 100);
 
-            MapGrid.MarkRegionExplored(200, 200);
-            MapGrid.MarkDrone(200, 200);
-            MapGrid.MarkRegionExplored(201, 201);
-            MapGrid.MarkDrone(201, 201);
+            Controller.controllerUpdate();
         }
 
     }
