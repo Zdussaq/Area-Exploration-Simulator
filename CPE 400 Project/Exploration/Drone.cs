@@ -14,27 +14,33 @@ namespace CPE400Project.Exploration
 		//set all coordinates as float?
 		//NEED TO GET WINDOW SIZE SOMEHOW
 		public int battery { get; set; }
-		public float X { get; set; }
-		public float Y { get; set; }
-		public float startX { get; set; }
-		public float startY { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
+		public int HomeX { get; set; }
+		public int HomeY { get; set; }
+		public int maxBattery { get; set; }
 		public IList<Instruction> Instructions { get; set; }
 
 
 		/// <summary>
 		/// Reduce the battery amount every second by 1, starts at 100
 		/// </summary>
-		public void update()
+		public bool update()
 		{
 			battery--;
+			if (X == HomeX && Y == HomeY)
+			{
+				battery = maxBattery;
+			}
 			if (battery > 0)
 			{
-				executeInstruction();
+				return executeInstruction();
 			}
+			return false;
 		}
 
 
-		void executeInstruction(){
+		public bool executeInstruction(){
 			
 			if(Instructions.Count > 0)
 			{
@@ -76,10 +82,12 @@ namespace CPE400Project.Exploration
 						break;
 				
 				}
+				return true;
 
 				
 
 			}
+			return false;
 
 
 		}
@@ -87,11 +95,14 @@ namespace CPE400Project.Exploration
 		/// <summary>
 		/// Constructor of the drone class
 		/// </summary>
-		public Drone(int x, int y, int batteryLife)
+		public Drone(int x, int y, int batteryLife, int homeX, int homeY)
 		{
 			battery = batteryLife;
+			maxBattery = batteryLife;
 			X = x;
 			Y = y;
+			HomeX = homeX;
+			HomeY = homeY;
 			Instructions = new List<Instruction>();
 
 		}

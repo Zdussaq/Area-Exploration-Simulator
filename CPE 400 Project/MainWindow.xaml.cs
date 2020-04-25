@@ -57,6 +57,33 @@ namespace CPE400Project
             LoadingVis = Visibility.Collapsed;
             BatterySlider.Minimum = 2*  Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
             DroneBattery = 2 * (int)BatterySlider.Minimum;
+
+
+
+
+            Map = new Map((int)90, (int)160);
+            MapGrid.DroneVision = DroneVision;
+            MapGrid.Map = Map;
+
+            IList<Drone> drones = new List<Drone>();
+            int startX = MapGrid.Map.HomeBase.XCenter;
+            int startY = MapGrid.Map.HomeBase.YCenter;
+            for (int i = 0; i < NumDrones; i++)
+            {
+                drones.Add(new Drone(startX, startY, DroneBattery, startX, startY));
+            }
+
+            this.Controller = new ClassController(MapGrid, drones);
+
+
+            LoadingVis = Visibility.Collapsed;
+            MapVis = Visibility.Visible;
+            UpdateLayout();
+
+
+            Controller.controllerUpdate();
+
+
         }
 
         #endregion Constructors
@@ -229,7 +256,7 @@ namespace CPE400Project
             int startY = MapGrid.Map.HomeBase.YCenter;
             for (int i = 0; i < NumDrones; i++)
             {
-                drones.Add(new Drone(startX, startY, DroneBattery));
+                drones.Add(new Drone(startX, startY, DroneBattery, startX, startY));
             }
 
             this.Controller = new ClassController(MapGrid, drones);
