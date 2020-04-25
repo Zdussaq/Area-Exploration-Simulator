@@ -11,9 +11,9 @@ namespace CPE400Project.Controller
     public class ClassController
     {
         //IList that will store X coordinates of drones
-        public IList<float> currentXCoords { get; set; }
+        public IList<float> XCoords { get; set; }
         //IList that will store Y coordinates of drones
-        public IList<float> currentYCoords { get; set; }
+        public IList<float> YCoords { get; set; }
         //IList that will store all drone's battery levels
         public IList<float> currentDroneBatteries { get; set; }
 
@@ -23,21 +23,34 @@ namespace CPE400Project.Controller
 
         //Constant running functions
 
-        public ClassController()
+        public ClassController(MapElement currentMap)
         {
-            currentXCoords = new List<float>();
-            currentYCoords = new List<float>();
+            XCoords = new List<float>();
+            YCoords = new List<float>();
             droneList = new List<Drone>();
-            map = new MapElement();
+            map = currentMap;
+        }
+
+        //Function that will run multiple times to sync the dronesList to the current drone variables
+        public void syncDrones(Drone drone, int numDrones, int index)
+        {
+            if(droneList.Count < numDrones)
+            {
+                droneList.Add(drone);
+            }
+            else
+            {
+                droneList[index] = drone;
+            }
         }
         
         //GENERAL UPDATE FUNCTION OF CONTROLLER
         //Function will update all drone properties as well as map properties
         public void controllerUpdate()
         {
+            determineFlight();
             updateDrone();
             updateMap();
-            determineFlight();
         }
 
         //Function that will update the controller with the current coordinates of each drone
@@ -51,11 +64,10 @@ namespace CPE400Project.Controller
         //Function that will update both X and Y coordinates of each drone
         public void updateDroneCoords()
         {
-            //droneList = new IList<Drone>();
             for(int i = 0; i < droneList.Count; i++)
             {
-                droneList[i].X = currentXCoords[i];
-                droneList[i].Y = currentYCoords[i];
+                droneList[i].X = XCoords[i];
+                droneList[i].Y = YCoords[i];
             }
         }
 
@@ -64,7 +76,7 @@ namespace CPE400Project.Controller
         {
             for(int i = 0; i < droneList.Count; i++)
             {
-                //droneList[i].battery = currentDroneBatteries[i];
+                droneList[i].battery = currentDroneBatteries[i];
             }
         }
 
@@ -72,12 +84,13 @@ namespace CPE400Project.Controller
         public void determineFlight(/*access to Drone class here*/)
         {
             //Reveal all parts of map within 20 points of the drone's path?
+            //will put new coordinates into XCoords, YCoords
         }
 
         //Function that will call Dean's Map.updateView() function
         public void updateMap()
         {
-           
+            map.UpdateMap(droneList);
         }
     }
 }
