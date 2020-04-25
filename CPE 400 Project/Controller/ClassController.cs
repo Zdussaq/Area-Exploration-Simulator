@@ -1,6 +1,7 @@
 ﻿using CPE400Project.MapDisplay;
 using System.Collections.Generic;
 using CPE400Project.Exploration;
+using System.Diagnostics;
 
 namespace CPE400Project.Controller
 {
@@ -48,19 +49,18 @@ namespace CPE400Project.Controller
         //Function will update all drone properties as well as map properties
         public void controllerUpdate()
         {
-            determineFlight();
             bool executing = true;
-            while (executing)
-            {
-                foreach (var i in droneList)
+            for (int _ = 0; _ < 10; _++) { 
+                executing = false;
+                for (int i = 0; i < this.droneList.Count; i++)
                 {
-                    executing = false;
-                    if (i.update())
+                    bool status = droneList[i].update();
+                    if (status)
                     {
                         executing = true;
                     }
                 }
-                updateMap();
+                //updateMap();
             }
         }
 
@@ -90,13 +90,6 @@ namespace CPE400Project.Controller
         //Function to calculate algorithm for where the drones should travel
         public void determineFlight(/*access to Drone class here*/)
         {
-            //Define number drones
-            //Create n number of regions
-            //define relative 0 per drone
-            //create instruction set
-
-            //bool finished = false;
-
             int numDrones = droneList.Count;
             int sectionWidth = map.Map.Width / numDrones;
 
@@ -133,20 +126,15 @@ namespace CPE400Project.Controller
                                 droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.E));
                                 currentX += sectionWidth;
                                 battery -= sectionWidth;
-                                if (currentX > 160)
-                                {
-
-                                }
                                 droneList[i].Instructions.Add(new Instruction(5, Directions.N));
                                 currentY += 5;
                                 battery -= 5;
-                                if (currentX > 160)
-                                {
-
-                                }
                                 droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.W));
                                 currentX -= sectionWidth;
                                 battery -= sectionWidth;
+                                droneList[i].Instructions.Add(new Instruction(5, Directions.N));
+                                currentY += 5;
+                                battery -= 5;
                             }
                         
                             
@@ -201,7 +189,7 @@ namespace CPE400Project.Controller
             int currentY = srcY;
 
             Instruction instruction = new Instruction();
-            while (currentX != targetX && currentY != targetY)
+            while (currentX != targetX || currentY != targetY)
             {
                 Directions direction;
                 if (currentX == targetX && currentY < targetY)
@@ -248,10 +236,9 @@ namespace CPE400Project.Controller
                     currentX--;
                     currentY++;
                 }
-
                 if (instruction.Direction != direction)
                 {
-                    if (instruction.Direction != null)
+                    if ((int)instruction.Direction != 0)
                     {
                         instructions.Add(instruction);
                     }
@@ -261,8 +248,6 @@ namespace CPE400Project.Controller
                 {
                     instruction.NumUnits++;
                 }
-
-
             }
 
             return instructions;

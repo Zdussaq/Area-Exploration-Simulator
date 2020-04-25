@@ -8,7 +8,7 @@ namespace CPE400Project.Exploration
 {
     public class Instruction
     {
-        public Directions? Direction { get; set; }
+        public Directions Direction { get; set; }
         public int NumUnits { get; set; }
 
          public Instruction(int numUnits, Directions direction)
@@ -19,7 +19,7 @@ namespace CPE400Project.Exploration
 
         public Instruction()
         {
-            Direction = null;
+            NumUnits = -1;
         }
     }
 }

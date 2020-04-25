@@ -11,8 +11,8 @@
         WindowState="Maximized">
 
 
-    <StackPanel VerticalAlignment="Center">
-        <StackPanel Visibility="Visible">
+    <StackPanel VerticalAlignment="Center" x:Name="MainPanel">
+        <StackPanel Visibility="{Binding Path=MapVis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <!--{Binding Path=MapVis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
             <local:MapElement  x:Name="MapGrid" Map="{Binding Path=Map}" Grid.Row="0"/>
             <StackPanel Height="30" Background="LightGray"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 5">
@@ -21,7 +21,8 @@
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0" Text="Home Base"/>
                 <TextBlock Width="7px" Height="7px" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0"/>
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0" Text="Unexplored Space"/>
-            </StackPanel> 
+            </StackPanel>
+            <Button Width="150" Click="Button_Click">Start</Button>
         </StackPanel>
         <StackPanel x:Name="LoadingScreen" Visibility="{Binding Path=LoadingVis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Generating Map..." FontSize="25pt"/>

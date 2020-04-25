@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace CPE400Project
 {
@@ -61,28 +62,7 @@ namespace CPE400Project
 
 
 
-            Map = new Map((int)90, (int)160);
-            MapGrid.DroneVision = DroneVision;
-            MapGrid.Map = Map;
-
-            IList<Drone> drones = new List<Drone>();
-            int startX = MapGrid.Map.HomeBase.XCenter;
-            int startY = MapGrid.Map.HomeBase.YCenter;
-            for (int i = 0; i < NumDrones; i++)
-            {
-                drones.Add(new Drone(startX, startY, DroneBattery, startX, startY));
-            }
-
-            this.Controller = new ClassController(MapGrid, drones);
-
-
-            LoadingVis = Visibility.Collapsed;
-            MapVis = Visibility.Visible;
-            UpdateLayout();
-
-
-            Controller.controllerUpdate();
-
+           
 
         }
 
@@ -243,11 +223,13 @@ namespace CPE400Project
         }
         private void BeginSimulation(object sender, RoutedEventArgs e)
         {
-            OptionsVis = Visibility.Collapsed;
+            OptionsVis = Visibility.Hidden;
             LoadingVis = Visibility.Visible;
-            UpdateLayout();
+            
 
-            Map = new Map((int)MapHeight, (int)MapWidth);
+
+            //ap = new Map((int)MapHeight, (int)MapWidth);
+            Map = new Map(600, 600);
             MapGrid.DroneVision = DroneVision;
             MapGrid.Map = Map;
 
@@ -260,15 +242,20 @@ namespace CPE400Project
             }
 
             this.Controller = new ClassController(MapGrid, drones);
-            
 
             LoadingVis = Visibility.Collapsed;
             MapVis = Visibility.Visible;
-            UpdateLayout();
 
 
-            Controller.controllerUpdate();
+            //Controller.controllerUpdate();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Controller.determineFlight();
+                Controller.controllerUpdate();
+                MapGrid.UpdateMap(Controller.droneList);
+            
+        }
     }
 }

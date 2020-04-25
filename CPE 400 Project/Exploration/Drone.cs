@@ -45,7 +45,7 @@ namespace CPE400Project.Exploration
 			if(Instructions.Count > 0)
 			{
 
-				if (Instructions[0].NumUnits == 0)
+				if (Instructions[0].NumUnits <= 0)
 				{
 					Instructions.RemoveAt(0);
 				}
@@ -82,6 +82,7 @@ namespace CPE400Project.Exploration
 						break;
 				
 				}
+				Instructions[0].NumUnits--;
 				return true;
 
 				

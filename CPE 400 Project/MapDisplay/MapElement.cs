@@ -298,8 +298,12 @@ namespace CPE400Project.MapDisplay
             Drones = drones;
             foreach ( var i in Drones )
             {
-                MarkRegionExplored((int)i.X, (int)i.Y);
-                MarkDrone((int)i.X, (int)i.Y);
+                MarkRegionExplored(i.X, i.Y);
+                
+            }
+            foreach (var i in Drones)
+            {
+                MarkDrone(i.X, i.Y);
             }
         }
         
