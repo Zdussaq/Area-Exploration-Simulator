@@ -115,24 +115,36 @@ namespace CPE400Project.Controller
 
                 foreach(var k in list)
                 {
-                    droneList[i].Instructions.Add(k);
+                    droneList[i].Instructions.Add(k);       //might use insert
                 }
 
                 currentX = startX;
                 currentY = startY;
 
-                droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.E));
-                currentX += sectionWidth;
-                
                 if(currentY < map.Map.Height)
                 {
-                    droneList[i].Instructions.Add(new Instruction(5, Directions.N));
-                    currentY += 5;
-                    droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.W));
+                    if((calculateDistanceToHome(currentX, currentY) + 10 + (3 * sectionWidth)) < battery)
+                    {
+                        droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.E));
+                        currentX += sectionWidth;
+                        battery -= sectionWidth;
+
+                        droneList[i].Instructions.Add(new Instruction(5, Directions.N));
+                        currentY += 5;
+                        battery -= 5;
+
+                        droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.W));
+                        currentX -= sectionWidth;
+                        battery -= sectionWidth;
+                    }
+                    else
+                    {
+                        mapTo(currentX, currentY, map.Map.HomeBase.XCenter, map.Map.HomeBase.YCenter);
+                    }
                 }
                 else
                 {
-                    //
+                    //return back to base
                 }
                 //droneList[i].Instructions.Add(new Instruction(5, Directions.N));
             }
