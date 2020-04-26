@@ -27,14 +27,16 @@ namespace CPE400Project.Exploration
 		/// </summary>
 		public bool update()
 		{
-			battery--;
+			
 			if (X == HomeX && Y == HomeY)
 			{
 				battery = maxBattery;
 			}
 			if (battery > 0)
 			{
+				battery--;
 				return executeInstruction();
+				
 			}
 			return false;
 		}
@@ -42,13 +44,11 @@ namespace CPE400Project.Exploration
 
 		public bool executeInstruction(){
 			
-			if(Instructions.Count > 0)
+
+			if(Instructions.Count != 0)
 			{
 
-				if (Instructions[0].NumUnits <= 0)
-				{
-					Instructions.RemoveAt(0);
-				}
+				
 				
 				switch(Instructions[0].Direction)
 				{
@@ -80,9 +80,17 @@ namespace CPE400Project.Exploration
 						Y += 1;
 						X -= 1;
 						break;
+					default:
+						break;
 				
 				}
 				Instructions[0].NumUnits--;
+
+				if (Instructions[0].NumUnits <= 0)
+				{
+					Instructions.RemoveAt(0);
+				}
+
 				return true;
 
 				

@@ -229,7 +229,7 @@ namespace CPE400Project
 
 
             //ap = new Map((int)MapHeight, (int)MapWidth);
-            Map = new Map(600, 600);
+            Map = new Map(300, 300);
             MapGrid.DroneVision = DroneVision;
             MapGrid.Map = Map;
 
@@ -242,6 +242,7 @@ namespace CPE400Project
             }
 
             this.Controller = new ClassController(MapGrid, drones);
+            Controller.determineFlight();
 
             LoadingVis = Visibility.Collapsed;
             MapVis = Visibility.Visible;
@@ -252,7 +253,6 @@ namespace CPE400Project
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Controller.determineFlight();
                 Controller.controllerUpdate();
                 MapGrid.UpdateMap(Controller.droneList);
             

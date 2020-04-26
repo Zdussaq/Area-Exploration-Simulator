@@ -32,18 +32,6 @@ namespace CPE400Project.Controller
             map = currentMap;
         }
 
-        //Function that will run multiple times to sync the dronesList to the current drone variables
-        public void syncDrones(Drone drone, int numDrones, int index)
-        {
-            if(droneList.Count < numDrones)
-            {
-                droneList.Add(drone);
-            }
-            else
-            {
-                droneList[index] = drone;
-            }
-        }
         
         //GENERAL UPDATE FUNCTION OF CONTROLLER
         //Function will update all drone properties as well as map properties
@@ -64,101 +52,80 @@ namespace CPE400Project.Controller
             }
         }
 
-        //Function that will update the controller with the current coordinates of each drone
-        //and the drones battery life
-        public void updateDrone()
-        {
-            updateDroneCoords();
-            updateDroneBatteries();
-        }
-
-        //Function that will update both X and Y coordinates of each drone
-        public void updateDroneCoords()
-        {
-            
-        }
-
-        //Function that will update all drone's battery levels
-        public void updateDroneBatteries()
-        {
-            for(int i = 0; i < droneList.Count; i++)
-            {
-                droneList[i].battery = (int)currentDroneBatteries[i];
-            }
-        }
-
         //Function to calculate algorithm for where the drones should travel
-        public void determineFlight(/*access to Drone class here*/)
+        public void determineFlight()
         {
-            int numDrones = droneList.Count;
-            int sectionWidth = map.Map.Width / numDrones;
 
-            for(int i = 0; i < droneList.Count; i++)
+            int baseX = map.Map.HomeBase.XCenter;
+            int baseY = map.Map.HomeBase.YCenter;
+
+            int regionSize = map.Map.Width / droneList.Count;
+
+            for (int i = 0; i < droneList.Count; i++)
             {
-                int startX = sectionWidth * i;
-                int startY = 3;
-
                 int currentX = droneList[i].X;
                 int currentY = droneList[i].Y;
+                int battery = droneList[i].battery;
+                int destX = i * regionSize;
+                int destY = 5;
 
-                bool finished = false;
-                while (!finished)
+                bool explored = false;
+
+                while (!explored)
                 {
-                    int battery = droneList[i].battery;
+                    var list = mapTo(currentX, currentY, destX, destY);
+                    foreach (var j in list)
+                    {
+                        droneList[i].Instructions.Add(j);
+                    }
 
-                    IList<Instruction> list = mapTo(currentX, currentY, startX, startY);
+                    currentX = destX;
+                    currentY = destY;
                     battery -= calculateBatteryUsage(list);
 
-                    foreach (var k in list)
-                    {
-                        droneList[i].Instructions.Add(k);       //might use insert
-                    }
-
-                    currentX = startX;
-                    currentY = startY;
-
-                    while ((calculateDistanceToHome(currentX, currentY) + 10 + (3 * sectionWidth)) < battery)
-                    {
-                        if (currentY < map.Map.Height)
-                        {
-                            while ((calculateDistanceToHome(currentX, currentY) + 10 + (3 * sectionWidth)) < battery)
-                            {
-                                droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.E));
-                                currentX += sectionWidth;
-                                battery -= sectionWidth;
-                                droneList[i].Instructions.Add(new Instruction(5, Directions.N));
-                                currentY += 5;
-                                battery -= 5;
-                                droneList[i].Instructions.Add(new Instruction(sectionWidth, Directions.W));
-                                currentX -= sectionWidth;
-                                battery -= sectionWidth;
-                                droneList[i].Instructions.Add(new Instruction(5, Directions.N));
-                                currentY += 5;
-                                battery -= 5;
-                            }
-                        
-                            
-                            var homeRoute = mapTo(currentX, currentY, map.Map.HomeBase.XCenter, map.Map.HomeBase.YCenter);
-                            foreach ( var j in homeRoute )
-                            {
-                                droneList[i].Instructions.Add(j);
-                            }
-
-                            startX = currentX;
-                            startY = currentY;
-
-                            currentX = map.Map.HomeBase.XCenter;
-                            currentY = map.Map.HomeBase.YCenter;
-
-                        }
-                        else
-                        {
-                            finished = true;
-                            battery = 0;
-                        }
-                    }
-
                     
+
+                    while (battery > calculateDistanceToHome(currentX, currentY) + ( 3 * regionSize) + 10 && currentY + 14 < map.Map.Height)
+                    {
+                        droneList[i].Instructions.Add(new Instruction(regionSize, Directions.E));
+                        droneList[i].Instructions.Add(new Instruction(7, Directions.N));
+                        droneList[i].Instructions.Add(new Instruction(regionSize, Directions.W));
+                        droneList[i].Instructions.Add(new Instruction(7, Directions.N));
+                        battery -= 14 + (2 * regionSize);
+                        currentY += 14;
+                    }
+
+
+                    if (!(currentY + 14 < map.Map.Height))
+                    {
+                        explored = true;
+                        list = mapTo(currentX, currentY, baseX, baseY);
+                        foreach (var j in list)
+                        {
+                            droneList[i].Instructions.Add(j);
+                        }
+                        currentX = baseX;
+                        currentY = baseY;
+                        battery = droneList[i].battery;
+
+                    }
+
+
+                    destX = currentX;
+                    destY = currentY;
+                    
+                    if ((battery <= calculateDistanceToHome(currentX, currentY) + (3 * regionSize) + 10) && !explored) {
+                        list = mapTo(currentX, currentY, baseX, baseY);
+                        foreach (var j in list)
+                        {
+                            droneList[i].Instructions.Add(j);
+                        }
+                        currentX = baseX;
+                        currentY = baseY;
+                        battery = droneList[i].battery;
+                    }
+                    
+
                 }
             }
 
@@ -238,7 +205,7 @@ namespace CPE400Project.Controller
                 }
                 if (instruction.Direction != direction)
                 {
-                    if ((int)instruction.Direction != 0)
+                    if (instruction.Direction != 0)
                     {
                         instructions.Add(instruction);
                     }
@@ -250,6 +217,7 @@ namespace CPE400Project.Controller
                 }
             }
 
+            instructions.Add(instruction);
             return instructions;
 
         }
