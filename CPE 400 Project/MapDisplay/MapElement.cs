@@ -98,8 +98,7 @@ namespace CPE400Project.MapDisplay
         public void MarkDrone(int x, int y)
         {
 
-            const int droneSize = 6;
-            const int droneRadius = (int)droneSize / 2;
+            const int droneRadius = 2;
 
             int maxX = (x + droneRadius < Map.Width) ? x + droneRadius : Map.Width;
             int minX = (x - droneRadius > 0) ? x - droneRadius : 0;

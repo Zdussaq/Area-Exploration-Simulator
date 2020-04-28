@@ -65,15 +65,15 @@ namespace CPE400Project.EnvironmentData
 
             //Next, define the home base
             int baseOrigin;
-            baseOrigin = random.Next() % (height - 7);
+            baseOrigin = random.Next() % (width - 7);
 
-            HomeBase = new Region(0, 6, baseOrigin, baseOrigin + 6);
+            HomeBase = new Region(baseOrigin, baseOrigin + 6, 0, 6);
 
-            for (int i = 0; i < 7; i++)
+            for (int i = baseOrigin; i < baseOrigin + 7; i++)
             {
-                for (int j = baseOrigin; j < baseOrigin + 7; j++)
+                for (int j = 0; j <  7; j++)
                 {
-                    this[i,j].HomeBase = true;
+                    this[i, j].HomeBase = true;
                 }
             }
             

@@ -19,10 +19,10 @@
                 <TextBlock FontSize="12pt" Text="KEY |" VerticalAlignment="Center" Margin="2 0"/>
                 <TextBlock Width="7px" Height="7px" Background="Red" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0"/>
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0" Text="Home Base"/>
-                <TextBlock Width="7px" Height="7px" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0"/>
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0" Text="Unexplored Space"/>
+                <TextBlock Width="4px" Height="4px" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0"/>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2 0" Text="Drone"/>
             </StackPanel>
-            <Button Width="150" Click="Button_Click">Start</Button>
+            <Button x:Name="restartBtn" Visibility="Collapsed" Width="150" Click="Button_Click">Restart Simulation</Button>
         </StackPanel>
         <StackPanel x:Name="LoadingScreen" Visibility="{Binding Path=LoadingVis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Generating Map..." FontSize="25pt"/>
@@ -50,7 +50,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock  HorizontalAlignment="Right" Grid.Column="1" Text="Drone Vision Radius: " Height="18" VerticalAlignment="Top"></TextBlock>
-                <Slider Name="VisionSlider" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=DroneVision, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="100" Minimum="10" Maximum="50" HorizontalAlignment="Left"></Slider>
+                <Slider Name="VisionSlider" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=DroneVision, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="100" Minimum="12" Maximum="50" HorizontalAlignment="Left"></Slider>
                 <TextBlock Width="35" Margin="5, 0, 0 ,0" Grid.Column="3" Text="{Binding ElementName=VisionSlider, Path=Value}"  HorizontalAlignment="Left"></TextBlock>
             </Grid>
             <Grid>

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,36 +35,17 @@ namespace CPE400Project
         {
             InitializeComponent();
             DataContext = this;
-
-            ////Initialize a map to test.
-            //Map = new Map(1000, 1600);
-            //MapGrid.Map = Map;
-            //DataContext = this;
-
-            //for (i = 0; i < 100; i += 4)
-            //{
-            //    for (j = 0; j < 100; j += 4)
-            //    {
-            //        MapGrid.MarkRegionExplored(i, j);
-            //    }
-            //}
-            
             DroneVision = 15;
             
             NumDrones = 20;
-            MapWidth = Width;
-            MapHeight = Height;
+            MapWidth = 800;
+            MapHeight = 600;
             OptionsVis = Visibility.Visible;
             MapVis = Visibility.Collapsed;
             LoadingVis = Visibility.Collapsed;
-            BatterySlider.Minimum = 2*  Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
+            restartBtn.Visibility = Visibility.Collapsed;
+            BatterySlider.Minimum = 3 *  Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
             DroneBattery = 2 * (int)BatterySlider.Minimum;
-
-
-
-
-           
-
         }
 
         #endregion Constructors
@@ -127,7 +109,7 @@ namespace CPE400Project
 
                 _mapWidth = value;
 
-                BatterySlider.Minimum = (int)(2 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2))) + 1;
+                BatterySlider.Minimum = (int)(3 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2))) + 1;
                 BatterySlider.Maximum = (BatterySlider.Minimum > 20000) ? 3 * BatterySlider.Minimum : 20000;
                 OnPropertyChanged();
             }
@@ -145,7 +127,7 @@ namespace CPE400Project
 
                 _mapHeight = value;
 
-                BatterySlider.Minimum = 2 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2));
+                BatterySlider.Minimum = (int)(3 * Math.Sqrt(Math.Pow(MapWidth, 2) + Math.Pow(MapHeight, 2))) + 1;
                 BatterySlider.Maximum = (BatterySlider.Minimum > 20000) ? 3 * BatterySlider.Minimum : 20000;
                 OnPropertyChanged();
             }
@@ -219,43 +201,84 @@ namespace CPE400Project
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            OnPropertyChanged(new PropertyChangedEventArgs(name));
+        }
+
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
         private void BeginSimulation(object sender, RoutedEventArgs e)
         {
-            OptionsVis = Visibility.Hidden;
+            OptionsVis = Visibility.Collapsed;
             LoadingVis = Visibility.Visible;
-            
+            restartBtn.Visibility = Visibility.Collapsed;
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                new Action(() =>
+                {
+                    Map = new Map((int)MapHeight, (int)MapWidth);
+                    MapGrid.DroneVision = DroneVision;
+                    MapGrid.Map = Map;
+
+                    IList<Drone> drones = new List<Drone>();
+                    int startX = MapGrid.Map.HomeBase.XCenter;
+                    int startY = MapGrid.Map.HomeBase.YCenter;
+                    for (int i = 0; i < NumDrones; i++)
+                    {
+                        drones.Add(new Drone(startX, startY, DroneBattery, startX, startY));
+                    }
+
+                    this.Controller = new ClassController(MapGrid, drones);
+                    Controller.DetermineFlight();
 
 
-            //ap = new Map((int)MapHeight, (int)MapWidth);
-            Map = new Map(300, 300);
-            MapGrid.DroneVision = DroneVision;
-            MapGrid.Map = Map;
 
-            IList<Drone> drones = new List<Drone>();
-            int startX = MapGrid.Map.HomeBase.XCenter;
-            int startY = MapGrid.Map.HomeBase.YCenter;
-            for (int i = 0; i < NumDrones; i++)
-            {
-                drones.Add(new Drone(startX, startY, DroneBattery, startX, startY));
-            }
+                    LoadingVis = Visibility.Collapsed;
+                    MapVis = Visibility.Visible;
 
-            this.Controller = new ClassController(MapGrid, drones);
-            Controller.determineFlight();
+                    int step = DroneVision - 4; //Offset by size of the drone itself
+                    int numInstructions = (Controller.MaxInstructionsRemaining / step) + 1;
+                    for (int j = 0; j < numInstructions; j++)
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(
+                            DispatcherPriority.Background,
+                            new Action(() =>
+                            {
+                                for (int _ = 0; _ < step; _++)
+                                {
+                                    Controller.ControllerUpdate();
+                                }
+                                MapGrid.UpdateMap(Controller.droneList);
+                            }));
 
-            LoadingVis = Visibility.Collapsed;
-            MapVis = Visibility.Visible;
+                    }
+
+                    MapGrid.UpdateMap(Controller.droneList);
+                    Application.Current.Dispatcher.BeginInvoke(
+                    DispatcherPriority.ContextIdle,
+                    new Action(() =>
+                    {
+                        restartBtn.Visibility = Visibility.Visible;
+                    }));
+                    
+                }));
 
 
-            //Controller.controllerUpdate();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-                Controller.controllerUpdate();
-                MapGrid.UpdateMap(Controller.droneList);
-            
+            Map = null;
+            Controller = null;
+            LoadingVis = Visibility.Collapsed;
+            MapVis = Visibility.Collapsed;
+            OptionsVis = Visibility.Visible;
         }
     }
 }

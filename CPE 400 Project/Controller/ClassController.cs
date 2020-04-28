@@ -11,12 +11,25 @@ namespace CPE400Project.Controller
     /// </summary>
     public class ClassController
     {
-        //IList that will store X coordinates of drones
-        public IList<float> XCoords { get; set; }
-        //IList that will store Y coordinates of drones
-        public IList<float> YCoords { get; set; }
         //IList that will store all drone's battery levels
         public IList<float> currentDroneBatteries { get; set; }
+
+        public int MaxInstructionsRemaining
+        {
+            get
+            {
+                int ret = 0;
+                foreach (var i in droneList)
+                {
+                    int moves = calculateBatteryUsage(i.Instructions);
+                    if (moves > ret)
+                    {
+                        ret = moves;
+                    }
+                }
+                return ret;
+            }
+        }
 
         public IList<Drone> droneList { get; set; }
 
@@ -26,8 +39,6 @@ namespace CPE400Project.Controller
 
         public ClassController(MapElement currentMap, IList<Drone> drones)
         {
-            XCoords = new List<float>();
-            YCoords = new List<float>();
             droneList = drones;
             map = currentMap;
         }
@@ -35,31 +46,23 @@ namespace CPE400Project.Controller
         
         //GENERAL UPDATE FUNCTION OF CONTROLLER
         //Function will update all drone properties as well as map properties
-        public void controllerUpdate()
+        public void ControllerUpdate()
         {
-            bool executing = true;
-            for (int _ = 0; _ < 10; _++) { 
-                executing = false;
-                for (int i = 0; i < this.droneList.Count; i++)
-                {
-                    bool status = droneList[i].update();
-                    if (status)
-                    {
-                        executing = true;
-                    }
-                }
-                //updateMap();
+            foreach (var i in droneList)
+            {
+                i.update();
             }
+                
         }
 
         //Function to calculate algorithm for where the drones should travel
-        public void determineFlight()
+        public void DetermineFlight()
         {
 
             int baseX = map.Map.HomeBase.XCenter;
             int baseY = map.Map.HomeBase.YCenter;
 
-            int regionSize = map.Map.Width / droneList.Count;
+            int regionSize = (int)((map.Map.Width / droneList.Count) + 1);
 
             for (int i = 0; i < droneList.Count; i++)
             {
@@ -69,8 +72,13 @@ namespace CPE400Project.Controller
                 int destX = i * regionSize;
                 int destY = 5;
 
-                bool explored = false;
+                int verticalStep = map.DroneVision;
 
+                int moveDistance = (destX + regionSize < map.Map.Width) ? regionSize : (map.Map.Width - destX - 1);
+
+                bool explored = false;
+                bool firstRun = true;
+                bool east = false;
                 while (!explored)
                 {
                     var list = mapTo(currentX, currentY, destX, destY);
@@ -83,20 +91,44 @@ namespace CPE400Project.Controller
                     currentY = destY;
                     battery -= calculateBatteryUsage(list);
 
-                    
 
-                    while (battery > calculateDistanceToHome(currentX, currentY) + ( 3 * regionSize) + 10 && currentY + 14 < map.Map.Height)
+
+                    if (firstRun)
                     {
-                        droneList[i].Instructions.Add(new Instruction(regionSize, Directions.E));
-                        droneList[i].Instructions.Add(new Instruction(7, Directions.N));
-                        droneList[i].Instructions.Add(new Instruction(regionSize, Directions.W));
-                        droneList[i].Instructions.Add(new Instruction(7, Directions.N));
-                        battery -= 14 + (2 * regionSize);
-                        currentY += 14;
+                        droneList[i].Instructions.Add(new Instruction(moveDistance, Directions.E));
+                        battery -= moveDistance;
+                        currentX += moveDistance;
+                        firstRun = false;
                     }
 
+                    
+                    while (battery > calculateDistanceToHome(currentX, currentY) + (2 * moveDistance) + (2 * verticalStep) && currentY + verticalStep < map.Map.Height)
+                    {
+                        Directions direction = (east) ? Directions.E : Directions.W;
+                        
+                        droneList[i].Instructions.Add(new Instruction(verticalStep, Directions.N));
+                        droneList[i].Instructions.Add(new Instruction(moveDistance, direction));
+                        
 
-                    if (!(currentY + 14 < map.Map.Height))
+                        if (east)
+                        {
+                            currentX += moveDistance;
+                        }
+                        else
+                        {
+                            currentX -= moveDistance;
+                        }
+
+                        east = !east;
+
+                        battery -= verticalStep + moveDistance;
+                        currentY += verticalStep;
+                    }
+
+                    destX = currentX;
+                    destY = currentY;
+
+                    if (currentY + verticalStep >= map.Map.Height)
                     {
                         explored = true;
                         list = mapTo(currentX, currentY, baseX, baseY);
@@ -107,14 +139,10 @@ namespace CPE400Project.Controller
                         currentX = baseX;
                         currentY = baseY;
                         battery = droneList[i].battery;
-
                     }
-
-
-                    destX = currentX;
-                    destY = currentY;
-                    
-                    if ((battery <= calculateDistanceToHome(currentX, currentY) + (3 * regionSize) + 10) && !explored) {
+                    //When battery needs to be recharged to continue
+                    if (battery <= calculateDistanceToHome(currentX, currentY) + (2 * moveDistance) + (2 * verticalStep) && !explored)
+                    {
                         list = mapTo(currentX, currentY, baseX, baseY);
                         foreach (var j in list)
                         {
@@ -124,8 +152,9 @@ namespace CPE400Project.Controller
                         currentY = baseY;
                         battery = droneList[i].battery;
                     }
-                    
 
+
+                    
                 }
             }
 
