@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace CPE400Project.EnvironmentData
 {
+    /// <summary>
+    /// Denotes a region - used to track home base position.
+    /// </summary>
     public class Region
     {
+        #region Constructors
         public Region(int xMin, int xMax, int yMin, int yMax)
         {
             XMin = xMin;
@@ -15,7 +19,9 @@ namespace CPE400Project.EnvironmentData
             YMin = yMin;
             YMax = yMax;
         }
+        #endregion Constructors
 
+        #region Properties
         public int XMin { get; set; }
         public int XMax { get; set; }
         public int XCenter { 
@@ -33,5 +39,6 @@ namespace CPE400Project.EnvironmentData
                 return (YMax + YMin) / 2;
             }
         }
+        #endregion Properties
     }
 }

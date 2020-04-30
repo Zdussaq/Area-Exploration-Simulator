@@ -13,36 +13,40 @@ namespace CPE400Project.Exploration
 
 		//set all coordinates as float?
 		//NEED TO GET WINDOW SIZE SOMEHOW
-		public int battery { get; set; }
+		public int Battery { get; set; }
 		public int X { get; set; }
 		public int Y { get; set; }
 		public int HomeX { get; set; }
 		public int HomeY { get; set; }
-		public int maxBattery { get; set; }
+		public int MaxBattery { get; set; }
 		public IList<Instruction> Instructions { get; set; }
 
 
 		/// <summary>
-		/// Reduce the battery amount every second by 1, starts at 100
+		/// Updates drone - will move its position by one and reduce battery by one
 		/// </summary>
-		public bool update()
+		/// <returns>if the update was a success. Will fail if no instructions are avaliable to run.</returns>
+		public bool Update()
 		{
 			
 			if (X == HomeX && Y == HomeY)
 			{
-				battery = maxBattery;
+				Battery = MaxBattery;
 			}
-			if (battery > 0)
+			if (Battery > 0)
 			{
-				battery--;
-				return executeInstruction();
+				Battery--;
+				return ExecuteInstruction();
 				
 			}
 			return false;
 		}
 
-
-		public bool executeInstruction(){
+		/// <summary>
+		/// Will perform a movement action for the drone
+		/// </summary>
+		/// <returns>if the movement succeeded. Will return false if no instructions exist</returns>
+		public bool ExecuteInstruction(){
 			
 
 			if(Instructions.Count != 0)
@@ -106,8 +110,8 @@ namespace CPE400Project.Exploration
 		/// </summary>
 		public Drone(int x, int y, int batteryLife, int homeX, int homeY)
 		{
-			battery = batteryLife;
-			maxBattery = batteryLife;
+			Battery = batteryLife;
+			MaxBattery = batteryLife;
 			X = x;
 			Y = y;
 			HomeX = homeX;

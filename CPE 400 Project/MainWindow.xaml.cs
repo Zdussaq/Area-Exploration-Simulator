@@ -178,42 +178,41 @@ namespace CPE400Project
         #endregion Binding Properties
 
         #region Properties
-
+        //manages when interface is interacted w/
         public event PropertyChangedEventHandler PropertyChanged;
 
+        //Data backing the map. For the actual code on the displayed map in runtime see the class: "MapElement"
         public Map Map { get; set; }
 
+        //This will manage all data changes
         public ClassController Controller { get; set; }
 
-        
+
 
         #endregion Properties
 
         #region PrivateFunctions
 
-
-        #endregion PrivateFunctions
-
-        #region PublicFunctions
-
-
-        #endregion Public FUnctions
-
+        /// <summary>
+        /// Manages interface changes
+        /// </summary>
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(name));
         }
-
+        /// <summary>
+        /// Manages interface changes
+        /// </summary>
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            PropertyChanged?.Invoke(this, e);
         }
+        /// <summary>
+        /// Starts the simulation itself- will call the controller and have it run through all fucnitons
+        /// </summary>
         private void BeginSimulation(object sender, RoutedEventArgs e)
         {
+            //modifies 
             OptionsVis = Visibility.Collapsed;
             LoadingVis = Visibility.Visible;
             restartBtn.Visibility = Visibility.Collapsed;
@@ -254,24 +253,28 @@ namespace CPE400Project
                                 {
                                     Controller.ControllerUpdate();
                                 }
-                                MapGrid.UpdateMap(Controller.droneList);
+                                MapGrid.UpdateMap(Controller.Drones);
                             }));
 
                     }
 
-                    MapGrid.UpdateMap(Controller.droneList);
+                    MapGrid.UpdateMap(Controller.Drones);
                     Application.Current.Dispatcher.BeginInvoke(
                     DispatcherPriority.ContextIdle,
                     new Action(() =>
                     {
                         restartBtn.Visibility = Visibility.Visible;
                     }));
-                    
+
                 }));
 
 
         }
 
+        /// <summary>
+        /// Restart button in the end of the mapping process.
+        /// Will reset the program to the state of when it first started.
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Map = null;
@@ -280,5 +283,15 @@ namespace CPE400Project
             MapVis = Visibility.Collapsed;
             OptionsVis = Visibility.Visible;
         }
+
+        #endregion PrivateFunctions
+
+        #region PublicFunctions
+
+
+        #endregion Public FUnctions
+
+
+
     }
 }
